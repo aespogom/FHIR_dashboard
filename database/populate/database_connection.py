@@ -22,14 +22,15 @@ def connect():
     except Exception as e:
         print("Not connected, ", e)
 
-def execute_query(query: str):
+def execute_query(query: str, params=()):
     '''
     Handles the execution of any query to the database
     Opens and closes the connection
     '''
     cursor = connect()
     try:
-        cursor.execute(query)
+        cursor.execute(query, params)
+        cursor.commit()
     except Exception as e:
         print('An error has ocurred: ', e)
     cursor.close()
