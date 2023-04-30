@@ -1,3 +1,7 @@
+'''
+    This module contains the connection for the SQL database
+'''
+
 import pyodbc
 import os
 from dotenv import load_dotenv
@@ -35,3 +39,19 @@ def execute_query(query: str, params=()):
         print('An error has ocurred: ', e)
     cursor.close()
     print('Connection closed')
+
+def return_query(query: str, params=()):
+    '''
+    Returns the result of any query to the database
+    Opens and closes the connection
+    '''
+    cursor = connect()
+    cursor.execute(query)
+    row = cursor.fetchone()
+    result = []
+    while row:
+        result.append(row)
+        row = cursor.fetchone()
+    cursor.close()
+    print('Connection closed')
+    return result
