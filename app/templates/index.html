@@ -2,25 +2,81 @@
 {% block title %}Care Dashboard{% endblock %}
 
 {% block content %}
-  <div class="container py-4">
+  <div class="container-fluid py-4">
     <div class="row pb-4">
       <div class="col">
-        <h1 class="h2 mb-0">Care Dashboard</h1>
+        <h1 class="h2 mb-0">MedDash</h1>
       </div>
     </div>
-    <div class="row pb-4">
-      <div class="col">
-        <div class="w-100 h-100 bg-light" style="min-height: 400px"></div>
+
+    <div class="row pb-4 h-50">
+      <div class="col-12"> 
+        There could be text here
+        <div class="row pb-4 bg-light h-100">
+          <div class="col-8 col-sm-2 bg-secondary bg-gradient text-white pt-2">
+            <form action="/action_page.php">
+              <select class="form-select" id="sel1" name="sellist1" value = "Department">
+                <option>Select department:</option>
+                <option value="Emergencydept">Emergency</option>
+                <option value = "Childcaredept">Childcare</option>
+                <option value = "Orthopedicsdept">Orthopedics</option>
+              </select>
+              <br>
+
+              <p class= "fw-bold text-white">Select variables for graph 1:</p> 
+              
+              <form action="/action_page.php">
+                <select class="form-select" style="width: 120px" id="sel2" name="sellist2" value = "selmen2">
+                  <option><p class = fw-bold>Y-axis</p></option>
+                  <option value = "sel2weigth">Weigth</option>
+                  <option value = "sel2heigth">Heigth</option>
+                  <option value = "sel2length">Length</option>
+                  <option value = "sel2fever">Fever</option>
+                </select>
+                <br>
+              <form action="/action_page.php">
+                <select class="form-select" style="width: 120px" id="sel3" name="sellist3" value ="selmen3">
+                  <option><p class = fw-bold>X-axis</p></option>
+                  <option value = "sel3weigth">Weigth</option>
+                  <option value = "sel3heigth">Heigth</option>
+                  <option value = "sel3length">Length</option>
+                  <option value = "sel3fever">Fever</option>
+                </select>
+                <br>
+          </div>
+
+          <div class="col-4 col-sm-5 border">
+            Place for a graph
+
+            {% if(selmen2 == sel3heigth and selmen3 == sel3weigth) %}
+              <h3> Welcome </h3>
+            {% else %}
+              <h3> No </h3>
+            {% endif %}
+
+            <div class="row pb-4 bg-success">
+              Graph 1.1
+            </div>
+
+            <div class="row pb-4 bg-light">
+              Graph 1.2
+            </div>
+          </div>
+
+          <div class="col-4 col-sm-5 border">
+            Place for another graph
+
+            <div class="row pb-4 bg-light">
+              Graph 2.1
+            </div>
+
+            <div class="row pb-4 bg-success">
+              Graph 2.2
+            </div>
+          </div>
+
       </div>
     </div>
-    <div class="row">
-      <div class="col-6">
-        <div class="w-100 h-100 bg-light" style="min-height: 400px"></div>
-      </div>
-      <div class="col-6">
-        <div class="w-100 h-100 bg-light" style="min-height: 400px"></div>
-      </div>
-    </div>
-  </div>
+  </div>  
 {% endblock %}
 
