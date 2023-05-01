@@ -1,8 +1,15 @@
-# FHIR_dashboard Application
+# MedDash App
 
-The following repository contains an application built in  Flask.
+MedDash project is designed to allow hospitals to easily monitor patient data from various sources in a single location. It utilizes the Fast Healthcare Interoperability Resources (FHIR) standard to transfer patient data and it is built using the Flask framework along with the Dash library for the web-based dashboard interface.
 
-This application is able to create customized dashboards from hospital health records.
+The dashboard can be easily customized to meet the needs of different hospital departments, with options to select which patient data sources to display, how the data is displayed, and other features.
+
+One of the key advantages of this project is its generalizability. With the use of FHIR, the dashboard can easily connect to various electronic health record (EHR) systems and other healthcare data sources. This means that hospitals and healthcare organizations of all sizes and specialties can use the dashboard to monitor and manage patient data, regardless of their existing infrastructure.
+
+The dashboard can be configured to display graphs that highlight trends, patterns, and insights that may be difficult to discern from raw data alone. This enables healthcare providers to quickly identify potential issues, such as spikes in patient activity or concerning changes in vital signs, and take action as needed.
+
+
+![Architecture](https://github.com/aespogom/FHIR_dashboard/blob/dev/Architecture.jpg)
 
 ## Getting started
 1. Clone the repository 
