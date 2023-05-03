@@ -1,29 +1,80 @@
-from dash import Dash, html, dcc, callback, Output, Input
-import plotly.express as px
+# import dash
+# import dash_core_components as dcc
+# import dash_html_components as html
+# import plotly.graph_objs as go
+# import pandas as pd
+
+# data = pd.read_csv('test.csv')
+
+# # Define the app
+# app = dash.Dash(__name__)
+
+# # Define the layout of the app
+# app.layout = html.Div([
+#     # dcc.Input(id='x-var', type='text', placeholder='Enter x variable name'),
+#     # dcc.Input(id='y-var', type='text', placeholder='Enter y variable name'),
+#     # html.Button(id='submit-button', n_clicks=0, children='Submit'),
+#     dcc.Graph(id='line-chart')
+# ])
+
+# # Define the callback function to update the chart
+# @app.callback(
+#     dash.dependencies.Output('line-chart', 'figure'),
+#     [dash.dependencies.Input('submit-button', 'n_clicks')],
+#     [dash.dependencies.State('x-var', 'value'),
+#      dash.dependencies.State('y-var', 'value')]
+# )
+# def update_line_chart(n_clicks, x_var, y_var):
+#     # Load the data and search for x and y variables
+    
+#     if x_var not in data.columns or y_var not in data.columns:
+#         return {}
+#     x_data = data[x_var]
+#     y_data = data[y_var]
+    
+#     # Create the line chart
+#     fig = go.Figure(data=[go.Scatter(x=x_data, y=y_data, mode='lines')])
+#     fig.update_layout(title=f'{y_var} vs. {x_var}', xaxis_title=x_var, yaxis_title=y_var)
+#     return fig
+
+# # Start the app
+# if __name__ == '__main__':
+#     app.run_server(debug=True)
+
+import dash
+import dash_core_components as dcc
+import dash_html_components as html
+import plotly.graph_objs as go
 import pandas as pd
-import plotly.graph_objects as go
 
-df = pd.read_csv('allergies.csv') 
+# Define the app
+app = dash.Dash(__name__)
 
-temp = df.groupby(["START", "DESCRIPTION"]).size()
-temp1 = temp.rename('amount affected').reset_index()
+# Read the data from the CSV file
+data = pd.read_csv('patients.csv')
 
-app = Dash(__name__)
+# Define the x and y variables as DataFrames
+x_var = data['HEALTHCARE_EXPENSES']
+y_var = data['INCOME']
 
+# Define the layout of the app
 app.layout = html.Div([
-    html.H1(children='Allergies', style={'textAlign':'center'}),
-    dcc.Dropdown(df.DESCRIPTION.unique(), 'Latex (substance)', id='dropdown-selection'),
-    dcc.Graph(id='graph-content')
+    html.Button(id='update-button', n_clicks=0, children='Update'),
+    dcc.Graph(id='line-chart')
 ])
 
-@callback(
-    Output('graph-content', 'figure'),
-    Input('dropdown-selection', 'value')
+# Define the line chart
+fig = go.Figure(data=[go.Scatter(x=x_var, y=y_var, mode='lines')])
+fig.update_layout(title='Line Chart', xaxis_title='X Axis', yaxis_title='Y Axis')
+
+# Define the callback function to update the chart
+@app.callback(
+    dash.dependencies.Output('line-chart', 'figure'),
+    [dash.dependencies.Input('update-button', 'n_clicks')]
 )
-def update_graph(value):
-    dff = temp1[temp1.DESCRIPTION==value]
-    return px.line(dff, x='START', y='amount affected')
+def update_chart(n_clicks):
+    return fig
 
-
+# Start the app
 if __name__ == '__main__':
     app.run_server(debug=True)
