@@ -11,30 +11,32 @@ import numpy as np
 
 
 ## SUPPLIES
-table_supplies= '''
-    IF OBJECT_ID('supplies') IS NOT NULL
-        DROP TABLE supplies;  
-    CREATE TABLE supplies (
-        DATE date,
-        PATIENT UNIQUEIDENTIFIER not null,
-        ENCOUNTER UNIQUEIDENTIFIER,
-        CODE integer,
-        DESCRIPTION nvarchar(150),
-        QUANTITY integer,
-        primary key (PATIENT, ENCOUNTER, DATE, CODE)
-    );'''
+def populate_table(reset_table: bool):
+    if reset_table:
+        table_supplies= '''
+            IF OBJECT_ID('supplies') IS NOT NULL
+                DROP TABLE supplies;  
+            CREATE TABLE supplies (
+                DATE date,
+                PATIENT UNIQUEIDENTIFIER not null,
+                ENCOUNTER UNIQUEIDENTIFIER,
+                CODE integer,
+                DESCRIPTION nvarchar(150),
+                QUANTITY integer,
+                primary key (PATIENT, ENCOUNTER, DATE, CODE)
+            );'''
 
-database_connection.execute_query(table_supplies)
+        database_connection.execute_query(table_supplies)
 
-data = pd.read_csv('./database/data/synthea_output/csv/supplies.csv')   
-df = pd.DataFrame(data)
-df = df.replace(np.nan,'',regex = True)
+    data = pd.read_csv('./database/data/synthea_output/csv/supplies.csv')   
+    df = pd.DataFrame(data)
+    df = df.reset_index(drop=True)
+    df = df.replace(np.nan,'',regex = True)
 
-for row in df.itertuples():
     populate_supplies = '''
         INSERT INTO supplies 
         (DATE,PATIENT,ENCOUNTER,CODE,DESCRIPTION,QUANTITY)
         VALUES (?,?,?,?,?,?)
         '''
-    database_connection.execute_query(populate_supplies, tuple(row[1:]))
+    database_connection.fast_insertion_dataframe(populate_supplies, df)
 

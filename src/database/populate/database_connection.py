@@ -55,3 +55,21 @@ def return_query(query: str, params=()):
     cursor.close()
     print('Connection closed')
     return result
+
+
+def fast_insertion_dataframe(table_statement: str, dataframe: any):
+    '''
+    Handles the Fast Data Loading From Pandas Dataframe
+    Opens and closes the connection
+    '''
+    cursor = connect()
+    cursor.fast_executemany = True  #Set fast_executemany  = True
+
+    try:
+        cursor.executemany(table_statement, dataframe.values.tolist()) #load data into azure sql db
+        cursor.commit()
+    except Exception as e:
+        print('An error has ocurred: ', e)
+    cursor.close()
+    print('Connection closed')
+

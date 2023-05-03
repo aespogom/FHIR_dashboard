@@ -11,37 +11,39 @@ import numpy as np
 
 
 ## PROVIDERS
-table_providers= '''
-    IF OBJECT_ID('providers') IS NOT NULL
-        DROP TABLE providers;  
-    CREATE TABLE providers (
-        ID UNIQUEIDENTIFIER,
-        ORGANIZATION nvarchar(150),
-        NAME nvarchar(150),
-        GENDER nvarchar(150),
-        SPECIALTY nvarchar(150),
-        ADDRESS nvarchar(150),
-        CITY nvarchar(150),
-        STATE nvarchar(150),
-        ZIP integer,
-        LAT integer,
-        LON integer,
-        ENCOUNTERS integer,
-        PROCEDURES integer,
-        primary key (ID)
-    );'''
+def populate_table(reset_table: bool):
+    if reset_table:
+        table_providers= '''
+            IF OBJECT_ID('providers') IS NOT NULL
+                DROP TABLE providers;  
+            CREATE TABLE providers (
+                ID UNIQUEIDENTIFIER,
+                ORGANIZATION nvarchar(150),
+                NAME nvarchar(150),
+                GENDER nvarchar(150),
+                SPECIALTY nvarchar(150),
+                ADDRESS nvarchar(150),
+                CITY nvarchar(150),
+                STATE nvarchar(150),
+                ZIP integer,
+                LAT integer,
+                LON integer,
+                ENCOUNTERS integer,
+                PROCEDURES integer,
+                primary key (ID)
+            );'''
 
-database_connection.execute_query(table_providers)
+        database_connection.execute_query(table_providers)
 
-data = pd.read_csv('./database/data/synthea_output/csv/providers.csv')   
-df = pd.DataFrame(data)
-df = df.replace(np.nan,'',regex = True)
+    data = pd.read_csv('./database/data/synthea_output/csv/providers.csv')   
+    df = pd.DataFrame(data)
+    df = df.reset_index(drop=True)
+    df = df.replace(np.nan,'',regex = True)
 
-for row in df.itertuples():
     populate_providers = '''
         INSERT INTO providers 
         (ID,ORGANIZATION,NAME,GENDER,SPECIALTY,ADDRESS,CITY,STATE,ZIP,LAT,LON,ENCOUNTERS,PROCEDURES)
         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
         '''
-    database_connection.execute_query(populate_providers, tuple(row[1:]))
+    database_connection.fast_insertion_dataframe(populate_providers, df)
 
