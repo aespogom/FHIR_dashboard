@@ -35,15 +35,15 @@ def populate_table(reset_table: bool):
 
         database_connection.execute_query(table_providers)
 
-    data = pd.read_csv('./database/data/synthea_output/csv/providers.csv')   
+    data = pd.read_csv('./src/database/data/synthea_output/csv/providers.csv')   
     df = pd.DataFrame(data)
-    df = df.reset_index(drop=True)
     df = df.replace(np.nan,'',regex = True)
+    for row in df.itertuples():
 
-    populate_providers = '''
-        INSERT INTO providers 
-        (ID,ORGANIZATION,NAME,GENDER,SPECIALTY,ADDRESS,CITY,STATE,ZIP,LAT,LON,ENCOUNTERS,PROCEDURES)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
-        '''
-    database_connection.fast_insertion_dataframe(populate_providers, df)
+        populate_providers = '''
+            INSERT INTO providers 
+            (ID,ORGANIZATION,NAME,GENDER,SPECIALTY,ADDRESS,CITY,STATE,ZIP,LAT,LON,ENCOUNTERS,PROCEDURES)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+            '''
+        database_connection.execute_query(populate_providers, tuple(row[1:]))
 

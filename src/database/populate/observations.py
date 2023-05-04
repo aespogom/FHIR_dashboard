@@ -31,16 +31,16 @@ def populate_table(reset_table: bool):
 
         database_connection.execute_query(table_observations)
 
-    data = pd.read_csv('./database/data/synthea_output/csv/observations.csv')   
+    data = pd.read_csv('./src/database/data/synthea_output/csv/observations.csv')   
     df = pd.DataFrame(data)
-    df = df.reset_index(drop=True)
     df = df.replace(np.nan,'',regex = True)
     df['DATE']= pd.to_datetime(df['DATE'], errors='ignore')
+    for row in df.itertuples():
 
-    populate_observations = '''
-        INSERT INTO observations 
-        (DATE,PATIENT,ENCOUNTER,CATEGORY,CODE,DESCRIPTION,VALUE,UNITS,TYPE)
-        VALUES (?,?,?,?,?,?,?,?,?)
-        '''
-    database_connection.fast_insertion_dataframe(populate_observations, df)
+        populate_observations = '''
+            INSERT INTO observations 
+            (DATE,PATIENT,ENCOUNTER,CATEGORY,CODE,DESCRIPTION,VALUE,UNITS,TYPE)
+            VALUES (?,?,?,?,?,?,?,?,?)
+            '''
+        database_connection.execute_query(populate_observations, tuple(row[1:]))
 

@@ -35,16 +35,16 @@ def populate_table(reset_table: bool):
 
         database_connection.execute_query(table_imaging_studies)
 
-    data = pd.read_csv('./database/data/synthea_output/csv/imaging_studies.csv')   
+    data = pd.read_csv('./src/database/data/synthea_output/csv/imaging_studies.csv')   
     df = pd.DataFrame(data)
-    df = df.reset_index(drop=True)
     df = df.replace(np.nan,'',regex = True)
     df['DATE']= pd.to_datetime(df['DATE'], errors='ignore')
+    for row in df.itertuples():
 
-    populate_imaging_studies = '''
-        INSERT INTO imaging_studies 
-        (ID,DATE,PATIENT,ENCOUNTER,SERIES_UID,BODYSITE_CODE,BODYSITE_DESCRIPTION,MODALITY_CODE,MODALITY_DESCRIPTION,INSTANCE_UID,SOP_CODE,SOP_DESCRIPTION,PROCEDURE_CODE)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
-        '''
-    database_connection.fast_insertion_dataframe(populate_imaging_studies, df)
+        populate_imaging_studies = '''
+            INSERT INTO imaging_studies 
+            (ID,DATE,PATIENT,ENCOUNTER,SERIES_UID,BODYSITE_CODE,BODYSITE_DESCRIPTION,MODALITY_CODE,MODALITY_DESCRIPTION,INSTANCE_UID,SOP_CODE,SOP_DESCRIPTION,PROCEDURE_CODE)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+            '''
+        database_connection.execute_query(populate_imaging_studies, tuple(row[1:]))
 

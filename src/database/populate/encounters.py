@@ -37,16 +37,16 @@ def populate_table(reset_table: bool):
 
         database_connection.execute_query(table_encounters)
 
-    data = pd.read_csv('./database/data/synthea_output/csv/encounters.csv')   
+    data = pd.read_csv('./src/database/data/synthea_output/csv/encounters.csv')   
     df = pd.DataFrame(data)
-    df = df.reset_index(drop=True)
     df = df.replace(np.nan,'',regex = True)
     df['START']= pd.to_datetime(df['START'], errors='ignore')
     df['STOP']= pd.to_datetime(df['STOP'], errors='ignore')
+    for row in df.itertuples():
 
-    populate_encounters = '''
-        INSERT INTO encounters 
-        (ID,START,STOP,PATIENT,ORGANIZATION,PROVIDER,PAYER,ENCOUNTERCLASS,CODE,DESCRIPTION,BASE_ENCOUNTER_COST,TOTAL_CLAIM_COST,PAYER_COVERAGE,REASONCODE,REASONDESCRIPTION)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-        '''
-    database_connection.fast_insertion_dataframe(populate_encounters, df)
+        populate_encounters = '''
+            INSERT INTO encounters 
+            (ID,START,STOP,PATIENT,ORGANIZATION,PROVIDER,PAYER,ENCOUNTERCLASS,CODE,DESCRIPTION,BASE_ENCOUNTER_COST,TOTAL_CLAIM_COST,PAYER_COVERAGE,REASONCODE,REASONDESCRIPTION)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            '''
+        database_connection.execute_query(populate_encounters, tuple(row[1:]))

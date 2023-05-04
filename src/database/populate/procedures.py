@@ -31,17 +31,17 @@ def populate_table(reset_table: bool):
 
         database_connection.execute_query(table_procedures)
 
-    data = pd.read_csv('./database/data/synthea_output/csv/procedures.csv')   
+    data = pd.read_csv('./src/database/data/synthea_output/csv/procedures.csv')   
     df = pd.DataFrame(data)
-    df = df.reset_index(drop=True)
     df = df.replace(np.nan,'',regex = True)
     df['START']= pd.to_datetime(df['START'], errors='ignore')
     df['STOP']= pd.to_datetime(df['STOP'], errors='ignore')
+    for row in df.itertuples():
 
-    populate_procedures = '''
-        INSERT INTO procedures 
-        (START,STOP,PATIENT,ENCOUNTER,CODE,DESCRIPTION,BASE_COST,REASONCODE,REASONDESCRIPTION)
-        VALUES (?,?,?,?,?,?,?,?,?)
-        '''
-    database_connection.fast_insertion_dataframe(populate_procedures, df)
+        populate_procedures = '''
+            INSERT INTO procedures 
+            (START,STOP,PATIENT,ENCOUNTER,CODE,DESCRIPTION,BASE_COST,REASONCODE,REASONDESCRIPTION)
+            VALUES (?,?,?,?,?,?,?,?,?)
+            '''
+        database_connection.execute_query(populate_procedures,  tuple(row[1:]))
 

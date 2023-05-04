@@ -28,15 +28,14 @@ def populate_table(reset_table: bool):
 
         database_connection.execute_query(table_supplies)
 
-    data = pd.read_csv('./database/data/synthea_output/csv/supplies.csv')   
+    data = pd.read_csv('./src/database/data/synthea_output/csv/supplies.csv')   
     df = pd.DataFrame(data)
-    df = df.reset_index(drop=True)
     df = df.replace(np.nan,'',regex = True)
-
-    populate_supplies = '''
-        INSERT INTO supplies 
-        (DATE,PATIENT,ENCOUNTER,CODE,DESCRIPTION,QUANTITY)
-        VALUES (?,?,?,?,?,?)
-        '''
-    database_connection.fast_insertion_dataframe(populate_supplies, df)
+    for row in df.itertuples():
+        populate_supplies = '''
+            INSERT INTO supplies 
+            (DATE,PATIENT,ENCOUNTER,CODE,DESCRIPTION,QUANTITY)
+            VALUES (?,?,?,?,?,?)
+            '''
+        database_connection.execute_query(populate_supplies,tuple(row[1:]))
 

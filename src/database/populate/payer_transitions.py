@@ -30,17 +30,17 @@ def populate_table(reset_table: bool):
 
         database_connection.execute_query(table_payer_transitions)
 
-    data = pd.read_csv('./database/data/synthea_output/csv/payer_transitions.csv')   
+    data = pd.read_csv('./src/database/data/synthea_output/csv/payer_transitions.csv')   
     df = pd.DataFrame(data)
-    df = df.reset_index(drop=True)
     df = df.replace(np.nan,'',regex = True)
     df['START_DATE']= pd.to_datetime(df['START_DATE'], errors='ignore')
     df['END_DATE']= pd.to_datetime(df['END_DATE'], errors='ignore')
+    for row in df.itertuples():
 
-    populate_payer_transitions = '''
-        INSERT INTO payer_transitions 
-        (PATIENT,MEMBERID,START_DATE,END_DATE,PAYER,SECONDARY_PAYER,PLAN_OWNERSHIP,OWNER_NAME)
-        VALUES (?,?,?,?,?,?,?,?)
-        '''
-    database_connection.fast_insertion_dataframe(populate_payer_transitions, df)
+        populate_payer_transitions = '''
+            INSERT INTO payer_transitions 
+            (PATIENT,MEMBERID,START_DATE,END_DATE,PAYER,SECONDARY_PAYER,PLAN_OWNERSHIP,OWNER_NAME)
+            VALUES (?,?,?,?,?,?,?,?)
+            '''
+        database_connection.execute_query(populate_payer_transitions, tuple(row[1:]))
 

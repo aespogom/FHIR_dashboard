@@ -49,17 +49,16 @@ def populate_table(reset_table: bool):
 
         database_connection.execute_query(table_patients)
 
-    data = pd.read_csv('./database/data/synthea_output/csv/patients.csv')   
+    data = pd.read_csv('./src/database/data/synthea_output/csv/patients.csv')   
     df = pd.DataFrame(data)
-    df = df.reset_index(drop=True)
     df = df.replace(np.nan,'',regex = True)
     df['BIRTHDATE']= pd.to_datetime(df['BIRTHDATE'], errors='ignore')
     df['DEATHDATE']= pd.to_datetime(df['DEATHDATE'], errors='ignore')
-
-    populate_patients = '''
-        INSERT INTO patients 
-        (ID,BIRTHDATE,DEATHDATE,SSN,DRIVERS,PASSPORT,PREFIX,FIRST,LAST,SUFFIX,MAIDEN,MARITAL,RACE,ETHNICITY,GENDER,BIRTHPLACE,ADDRESS,CITY,STATE,COUNTY,FIPS,ZIP,LAT,LON,HEALTHCARE_EXPENSES,HEALTHCARE_COVERAGE,INCOME)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-        '''
-    database_connection.fast_insertion_dataframe(populate_patients, df)
+    for row in df.itertuples():
+        populate_patients = '''
+            INSERT INTO patients 
+            (ID,BIRTHDATE,DEATHDATE,SSN,DRIVERS,PASSPORT,PREFIX,FIRST,LAST,SUFFIX,MAIDEN,MARITAL,RACE,ETHNICITY,GENDER,BIRTHPLACE,ADDRESS,CITY,STATE,COUNTY,FIPS,ZIP,LAT,LON,HEALTHCARE_EXPENSES,HEALTHCARE_COVERAGE,INCOME)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            '''
+        database_connection.execute_query(populate_patients, tuple(row[1:]))
 

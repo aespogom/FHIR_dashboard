@@ -25,7 +25,7 @@ def populate_table(reset_table: bool):
                 ZIP integer,
                 LAT integer,
                 LON integer,
-                PHONE bigint,
+                PHONE nvarchar(150),
                 REVENUE integer,
                 UTILIZATION integer,
                 primary key (ID)
@@ -33,15 +33,14 @@ def populate_table(reset_table: bool):
 
         database_connection.execute_query(table_organizations)
 
-    data = pd.read_csv('./database/data/synthea_output/csv/organizations.csv')   
+    data = pd.read_csv('./src/database/data/synthea_output/csv/organizations.csv')   
     df = pd.DataFrame(data)
-    df = df.reset_index(drop=True)
     df = df.replace(np.nan,'',regex = True)
-
-    populate_organizations = '''
-        INSERT INTO organizations 
-        (ID,NAME,ADDRESS,CITY,STATE,ZIP,LAT,LON,PHONE,REVENUE,UTILIZATION)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?)
-        '''
-    database_connection.fast_insertion_dataframe(populate_organizations, df)
+    for row in df.itertuples():
+        populate_organizations = '''
+            INSERT INTO organizations 
+            (ID,NAME,ADDRESS,CITY,STATE,ZIP,LAT,LON,PHONE,REVENUE,UTILIZATION)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?)
+            '''
+        database_connection.execute_query(populate_organizations, tuple(row[1:]))
 

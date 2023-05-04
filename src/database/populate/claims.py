@@ -53,7 +53,7 @@ def populate_table(reset_table: bool):
 
         database_connection.execute_query(table_claims)
 
-    data = pd.read_csv('./database/data/synthea_output/csv/claims.csv')   
+    data = pd.read_csv('./src/database/data/synthea_output/csv/claims.csv')   
     df = pd.DataFrame(data)
     df = df.reset_index(drop=True)
     df = df.replace(np.nan,'',regex = True)
@@ -62,11 +62,12 @@ def populate_table(reset_table: bool):
     df['LASTBILLEDDATE1']= pd.to_datetime(df['LASTBILLEDDATE1'], errors='ignore')
     df['LASTBILLEDDATE2']= pd.to_datetime(df['LASTBILLEDDATE2'], errors='ignore')
     df['LASTBILLEDDATEP']= pd.to_datetime(df['LASTBILLEDDATEP'], errors='ignore')
-
-    populate_claims = '''
-        INSERT INTO claims 
-        (ID,PATIENTID,PROVIDERID,PRIMARYPATIENTINSURANCEID,SECONDARYPATIENTINSURANCEID,DEPARTMENTID,PATIENTDEPARTMENTID,DIAGNOSIS1,DIAGNOSIS2,DIAGNOSIS3,DIAGNOSIS4,DIAGNOSIS5,DIAGNOSIS6,DIAGNOSIS7,DIAGNOSIS8,REFERRINGPROVIDERID,APPOINTMENTID,CURRENTILLNESSDATE,SERVICEDATE,SUPERVISINGPROVIDERID,STATUS1,STATUS2,STATUSP,OUTSTANDING1,OUTSTANDING2,OUTSTANDINGP,LASTBILLEDDATE1,LASTBILLEDDATE2,LASTBILLEDDATEP,HEALTHCARECLAIMTYPEID1,HEALTHCARECLAIMTYPEID2)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-        '''
-    database_connection.execute_query(populate_claims, df)
+    
+    for row in df.itertuples():
+        populate_claims = '''
+            INSERT INTO claims 
+            (ID,PATIENTID,PROVIDERID,PRIMARYPATIENTINSURANCEID,SECONDARYPATIENTINSURANCEID,DEPARTMENTID,PATIENTDEPARTMENTID,DIAGNOSIS1,DIAGNOSIS2,DIAGNOSIS3,DIAGNOSIS4,DIAGNOSIS5,DIAGNOSIS6,DIAGNOSIS7,DIAGNOSIS8,REFERRINGPROVIDERID,APPOINTMENTID,CURRENTILLNESSDATE,SERVICEDATE,SUPERVISINGPROVIDERID,STATUS1,STATUS2,STATUSP,OUTSTANDING1,OUTSTANDING2,OUTSTANDINGP,LASTBILLEDDATE1,LASTBILLEDDATE2,LASTBILLEDDATEP,HEALTHCARECLAIMTYPEID1,HEALTHCARECLAIMTYPEID2)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            '''
+        database_connection.execute_query(populate_claims,tuple(row[1:]))
 

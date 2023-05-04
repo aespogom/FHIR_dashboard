@@ -21,7 +21,7 @@ def connect():
     try:
         cnxn = pyodbc.connect(f'DRIVER={DRIVER};SERVER={SERVER};DATABASE={DATABASE};Uid={UID};Pwd={PWD};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;')
         cursor = cnxn.cursor()
-        print("Database connected")
+        # print("Database connected")
         return cursor
     except Exception as e:
         print("Not connected, ", e)
@@ -38,7 +38,7 @@ def execute_query(query: str, params=()):
     except Exception as e:
         print('An error has ocurred: ', e)
     cursor.close()
-    print('Connection closed')
+    # print('Connection closed')
 
 def return_query(query: str, params=()):
     '''

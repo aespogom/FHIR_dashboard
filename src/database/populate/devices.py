@@ -29,16 +29,16 @@ def populate_table(reset_table: bool):
 
         database_connection.execute_query(table_devices)
 
-    data = pd.read_csv('./database/data/synthea_output/csv/devices.csv')   
+    data = pd.read_csv('./src/database/data/synthea_output/csv/devices.csv')   
     df = pd.DataFrame(data)
-    df = df.reset_index(drop=True)
     df = df.replace(np.nan,'',regex = True)
     df['START']= pd.to_datetime(df['START'], errors='ignore')
     df['STOP']= pd.to_datetime(df['STOP'], errors='ignore')
 
-    populate_devices = '''
-        INSERT INTO devices 
-        (START,STOP,PATIENT,ENCOUNTER,CODE,DESCRIPTION,UDI)
-        VALUES (?,?,?,?,?,?,?)
-        '''
-    database_connection.fast_insertion_dataframe(populate_devices, df)
+    for row in df.itertuples():
+        populate_devices = '''
+            INSERT INTO devices 
+            (START,STOP,PATIENT,ENCOUNTER,CODE,DESCRIPTION,UDI)
+            VALUES (?,?,?,?,?,?,?)
+            '''
+        database_connection.execute_query(populate_devices, tuple(row[1:]))

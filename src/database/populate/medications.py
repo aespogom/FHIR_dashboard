@@ -35,17 +35,17 @@ def populate_table(reset_table: bool):
 
         database_connection.execute_query(table_medications)
 
-    data = pd.read_csv('./database/data/synthea_output/csv/medications.csv')   
+    data = pd.read_csv('./src/database/data/synthea_output/csv/medications.csv')   
     df = pd.DataFrame(data)
-    df = df.reset_index(drop=True)
     df = df.replace(np.nan,'',regex = True)
     df['START']= pd.to_datetime(df['START'], errors='ignore')
     df['STOP']= pd.to_datetime(df['STOP'], errors='ignore')
+    for row in df.itertuples():
 
-    populate_medications = '''
-        INSERT INTO medications 
-        (START,STOP,PATIENT,PAYER,ENCOUNTER,CODE,DESCRIPTION,BASE_COST,PAYER_COVERAGE,DISPENSES,TOTALCOST,REASONCODE,REASONDESCRIPTION)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
-        '''
-    database_connection.fast_insertion_dataframe(populate_medications, df)
+        populate_medications = '''
+            INSERT INTO medications 
+            (START,STOP,PATIENT,PAYER,ENCOUNTER,CODE,DESCRIPTION,BASE_COST,PAYER_COVERAGE,DISPENSES,TOTALCOST,REASONCODE,REASONDESCRIPTION)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+            '''
+        database_connection.execute_query(populate_medications, tuple(row[1:]))
 
