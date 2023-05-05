@@ -6,7 +6,7 @@ import pandas as pd
 # configs and received from frontend
 data_path = '/home/dilaratank/Desktop/FHIRdevdays/synthea/synthea_output/csv/'
 
-graph_type = 'linechart'
+graph_type = 'scatterplot'
 dataframe = 'patients'
 data_element_x = 'INCOME'
 data_element_y = 'HEALTHCARE_EXPENSES'
@@ -29,9 +29,9 @@ app.layout = html.Div([
     dcc.Graph(id='chart')
 ])
 
-# Define the line chart
+# Define the chart
 if graph_type == 'linechart':
-    fig = go.Figure(data=[go.Scatter(x=x_var, y=y_var, mode='markers')])
+    fig = go.Figure(data=[go.Scatter(x=x_var, y=y_var, mode='lines')])
     fig.update_layout(title='Line Chart', xaxis_title=data_element_x, yaxis_title=data_element_y)
 elif graph_type == 'barchart':
     df = data.groupby(data_element_x)[data_element_y].sum().reset_index()
@@ -41,6 +41,9 @@ elif graph_type == 'piechart':
     df = data.groupby(data_element_x).size().rename('Value').reset_index()
     fig = go.Figure(data=[go.Pie(labels=df[data_element_x], values=df['Value'])])
     fig.update_layout(title='Pie Chart', xaxis_title=data_element_x, yaxis_title=data_element_y)
+elif graph_type == 'scatterplot':
+    fig = go.Figure(data=[go.Scatter(x=x_var, y=y_var, mode='markers')])
+    fig.update_layout(title='Line Chart', xaxis_title=data_element_x, yaxis_title=data_element_y)
 
 # Define the callback function to update the chart
 @app.callback(
