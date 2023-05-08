@@ -29,6 +29,16 @@ Then, run the following command in your terminal:
 pip install -r requirements.txt
 ```
 
+## Start the Database
+To initiate the database, navigate to the project directory in your terminal and run the following command:
+
+```
+docker-compose -f docker-compose.mssqlserver_host.yml up -d
+```
+
+This will start the Flask development server and the application will be available at http://localhost:8080
+
+
 ## Running the Application
 To run the application, navigate to the project directory in your terminal and run the following command:
 
@@ -37,6 +47,7 @@ python -m flask run
 ```
 
 This will start the Flask development server and the application will be available at http://localhost:5000.
+
 
 ## Usage
 TODO
