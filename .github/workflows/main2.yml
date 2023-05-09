@@ -1,0 +1,30 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  container-test-job:
+    runs-on: ubuntu-latest
+    container:
+      image: firely/server:latest
+      ports:
+        - "8080:4080"
+      environment:
+        - VONK_Repository=SQL
+        - VONK_SqlDbOptions:ConnectionString=Database=VonkData;Server=${SERVER};User ID=${UID};Password=${PWD}
+        - VONK_SqlDbOptions:SchemaName=vonk
+        - VONK_SqlDbOptions:AutoUpdateDatabase=false
+        - VONK_SqlDbOptions:AutoUpdateConnectionString=Database=VonkData;Server=${SERVER};User ID=${UID};Password=${PWD}
+        - VONK_Administration:Repository=SQL
+        - VONK_Administration:SqlDbOptions:ConnectionString=Database=VonkAdmin;Server=${SERVER};User ID=${UID};Password=${PWD}
+        - VONK_Administration:SqlDbOptions:SchemaName=vonkadmin
+        - VONK_Administration:SqlDbOptions:AutoUpdateDatabase=false
+        - VONK_Administration:SqlDbOptions:AutoUpdateConnectionString=Database=VonkAdmin;Server=${SERVER};User ID=${UID};Password=${PWD}
+        - VONK_License:LicenseFile=./license/firelyserver-license.json
+      volumes:
+        - .:/app/license
+      extra_hosts:
+        - "my_host:20.14.125.128"
