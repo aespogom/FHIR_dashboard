@@ -28,4 +28,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/firely/server:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/firely:latest
