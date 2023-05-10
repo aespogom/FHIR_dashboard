@@ -1,6 +1,32 @@
 {% extends "base.html" %}
 {% block title %}Care Dashboard{% endblock %}
 {% block content %}
+
+<body style="font-family:arial, sans-serif">
+  <input type="text" id="fname" name="fname" onchange="cb(this.value)">
+</body>
+
+<head>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+      function cb(selection) {
+          $.getJSON({
+              url: "/callback", data: { 'data': selection }, success: function (result) {
+                  Plotly.newPlot('chart', result, {staticPlot: true});;
+              }
+          });
+      }
+  </script>
+</head>
+
+<script>
+  d = {{ graphJSON | safe }};
+  d.config={staticPlot: true};
+  Plotly.newPlot('chart', d, {});
+</script>
+
+
 <div class="container-fluid">
   <div class="row">
   </div>
@@ -15,18 +41,20 @@
 
       <div id="select-graph-div">
 
-      </div>
+      </div>image.png
       <div id="select-resource-div">
 
       </div>
       <div id="select-variabele-div">
-      
-      </div>
+
     </div>
+  </div>
     <div class="col-9">
       <div class="row g-2">
         <div class="col-lg-6 p-2">
-          <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-1"></div>
+          <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-1">
+            <div id="chart" class="chart"></div>
+          </div>
         </div>
         <div class="col-lg-6 p-2">
           <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-2"></div>
@@ -51,4 +79,7 @@
     </div>
   </div>
 </div>
+
+
+
 {% endblock %}
