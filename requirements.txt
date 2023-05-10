@@ -2,3 +2,4 @@ Flask==2.2.3
 pyodbc==4.0.32
 python_dotenv==1.0.0
 pandas==2.0.1
+fhirclient==4.1.0
