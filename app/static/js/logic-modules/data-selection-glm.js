@@ -53,9 +53,9 @@ async function writeInterfaceText(graph_type) {
         }
     } else if (graph_type == 'Bar graph') {
         if (current_variables_selected == 0) {
-            return "Select the variable you want to create a bar graph with";
-        } else {
-            return 1;
+            return "Select the X variable for your bar graph";
+        } else if (current_variables_selected >= 1) {
+            return "Select the Y variable for your bar graph";
         }
     } else if (graph_type == 'Pie chart') {
         if (current_variables_selected == 0) {

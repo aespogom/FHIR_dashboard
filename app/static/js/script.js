@@ -11,7 +11,7 @@ $("#add-graph").click(function () {
         $('[id^="graph-location"]').off("click");
         graph_location = $(this);
         $(graph_location).addClass("bg-secondary").removeClass("bg-light");
-        $("#add-graph").nextAll().empty();
+        $("#add-graph").next().nextAll().empty();
         showSelectGraph();
     })
 })
@@ -85,4 +85,31 @@ function showSelectVariable(current_number_of_variables_selected, interface_text
     });
     select_string += "</select >"
     $("#select-variabele-div").append(select_string);
+}
+
+$("#create-graph").off("click").on("click", function() {
+    var graph_type = $("#select-graph-type").val();
+    var resource = $("#select-resource").val();
+    var data_element_x = $("#select-variable-0").val().toUpperCase();
+    if($("#select-variable-1").val()) {
+        var data_element_y = $("#select-variable-1").val().toUpperCase();
+    } else {
+        var data_element_y = '';
+    }
+    var data = JSON.stringify({graph_type: graph_type, resource: resource, data_element_x: data_element_x, data_element_y: data_element_y});
+    cb(data);
+})
+
+
+function cb(data) {
+    $.ajax({
+        type: "POST",
+        url: "/callback",
+        data: data,
+        contentType: "application/json",
+        dataType: 'json',
+        success: function (data) {
+            Plotly.newPlot(graph_location[0], data, {staticPlot: true});;
+        },
+    })
 }
