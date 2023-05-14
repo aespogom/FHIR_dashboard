@@ -1,0 +1,34 @@
+{
+    "allergies": [
+        {
+            "start": "date",
+            "stop": "date",
+            "patient": "uuid",
+            "encounter": "uuid",
+            "code": "int",
+            "system": "string",
+            "description": "string",
+            "type": "string",
+            "category": "string",
+            "reaction1": "int",
+            "description1": "string",
+            "severity1": "string",
+            "reaction2": "int",
+            "description2": "string",
+            "severity2": "string"
+        }
+    ],
+    "careplans": [
+        {
+            "id": "uuid",
+            "start": "date",
+            "stop": "date",
+            "patient": "uuid",
+            "encounter": "uuid",
+            "code": "int",
+            "description": "string",
+            "reasonCode": "int",
+            "reasonDescription": "string"
+        }
+    ]
+}
