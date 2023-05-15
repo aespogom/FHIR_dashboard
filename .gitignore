@@ -365,6 +365,8 @@ htmlcov/
 dist/
 build/
 *.egg-info/
+src/database/data/synthea_output/zip
+src/database/data/synthea_output/resources
 src/database/data/synthea_output/csv/careplans.csv
 src/database/data/synthea_output/csv/claims_transactions.csv
 src/database/data/synthea_output/csv/claims.csv
