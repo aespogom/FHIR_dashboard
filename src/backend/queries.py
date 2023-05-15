@@ -67,7 +67,7 @@ def create_dataframe(dataframe: pd.DataFrame,
   x_data = [ (name, data_type, is_list) for name, name_json, data_type, is_list, of_many, not_optional in properties if name == x_col]
   x_access = "['"+x_col+"']"
   
-  with open('static/dicts/FHIR_dict.json') as fp:
+  with open('static/dicts/resource_variables.json') as fp:
     keys_FHIR = json.load(fp)
 
   if x_data[0][1] != str and x_data[0][1] != int and x_data[0][1].resource_type in keys_FHIR['DATA_TYPE'].keys():
@@ -87,7 +87,7 @@ def create_dataframe(dataframe: pd.DataFrame,
       registry_as_json = registry.as_json()
       x_value = eval("registry_as_json"+x_access) if registry_as_json.get(x_col) else None
       y_value = eval("registry_as_json"+y_access) if y_col and registry_as_json.get(y_col) else None
-      dataframe.loc[len(dataframe)] = [x_value, y_value]
+      dataframe.loc[len(dataframe)] = [str(x_value), y_value]
 
   return dataframe
 
@@ -129,7 +129,6 @@ def query_firely_server(resource: str,
                 registry = eval("backend.utils."+resource.lower()+"."+resource+"(entry['resource'])")
                 list_registries.append(registry)
             dataframe = create_dataframe(dataframe,x,y,list_registries)
-            print(dataframe)
         return dataframe
 
     result.raise_for_status()

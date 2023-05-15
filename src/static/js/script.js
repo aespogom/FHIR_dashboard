@@ -43,8 +43,15 @@ function showSelectResource() {
         <p> Now select the a resource for which you want to create a graph </p>
         <select class="form-select" id="select-resource" name="select-resource" value="select-resource">
         <option style="display: none">Resource</option>
-        <option value="CarePlans">CarePlans</option>
-        <option value="AllergyIntolerance">AllergyIntolerance</option>
+        <option value="CarePlan">Careplans</option>
+        <option value="Condition">Conditions</option>
+        <option value="AllergyIntolerance">Allergies</option>
+        <option value="Appointment">Appointments</option>
+        <option value="Immunization">Immunizations</option>
+        <option value="Medication">Medication</option>
+        <option value="Observation">Observations</option>
+        <option value="Procedure">Procedures</option>
+        <option value="Patient">Patients</option>
         </select>
     `);
 }
