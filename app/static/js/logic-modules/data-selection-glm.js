@@ -2,6 +2,7 @@ var current_variables_selected = -1;
 var line_graph = ['date', 'int'];
 var bar_graph = ['string'];
 var pie_chart = ['string'];
+var scatter_plot = ['int'];
 
 export async function getResourceVariables(graph_type, resource_type, selected_variable) {
     const response = await fetch('../../static/dicts/resource_variables.json');
@@ -30,6 +31,8 @@ function filterVariables(variables, graph_type, selected_variable) {
             allowed_variables = bar_graph;
         } else if (graph_type == 'Pie chart') {
             allowed_variables = pie_chart;
+        } else if (graph_type == 'Scatter plot') {
+            allowed_variables = scatter_plot;
         }
 
         if (allowed_variables.includes(variable_type)) {
@@ -62,6 +65,12 @@ async function writeInterfaceText(graph_type) {
             return "Select the variable you want to create a pie chart with";
         } else {
             return 1;
+        }
+    } else if (graph_type == 'Scatter plot') {
+        if (current_variables_selected == 0) {
+            return "Select the X variable for your scatter plot";
+        } else if (current_variables_selected >= 1) {
+            return "Select the Y variable for your scatter plot";
         }
     }
 }

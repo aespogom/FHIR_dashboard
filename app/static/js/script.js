@@ -25,6 +25,7 @@ function showSelectGraph() {
         <option value="Bar graph">Bar graph</option>
         <option value="Line graph">Line graph</option>
         <option value="Pie chart">Pie chart</option>
+        <option value="Scatter plot">Scatter plot</option>
         </select>
     `);
 }
@@ -113,3 +114,29 @@ function cb(data) {
         },
     })
 }
+
+// $("#graph-locations").resizable({
+//     resize: function(event, ui) {
+//         var parentwidth = $("#container").innerWidth();
+//         var parentheight = $("#container").innerHeight();
+//         $("#child").css({'width':parentwidth, 'height':parentheight});
+//     }
+//  });
+
+// function resizePlotContainers() {
+//     console.log(1);
+//     $('.svg-container').each(function() {
+//         console.log(2);
+//         var parentDiv = $(this).parent();
+//         console.log(parentDiv);
+//         var width = parentDiv.width();
+//         var height = parentDiv.height();
+
+//         $(this).css('width', width + 'px');
+//         $(this).css('height', height + 'px');
+//     });
+//   }
+
+//   $(window).resize(resizePlotContainers);
+//   resizePlotContainers(); // Initial resize on page load
+//   console.log(3);
