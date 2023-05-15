@@ -1,21 +1,13 @@
 {
-    "allergies": [
+    "AllergyIntolerance": [
         {
-            "start": "date",
-            "stop": "date",
-            "patient": "uuid",
-            "encounter": "uuid",
-            "code": "int",
-            "system": "string",
-            "description": "string",
+            "clinicalStatus": "string",
+            "verificationStatus": "string",
             "type": "string",
             "category": "string",
-            "reaction1": "int",
-            "description1": "string",
-            "severity1": "string",
-            "reaction2": "int",
-            "description2": "string",
-            "severity2": "string"
+            "criticality": "string",
+            "code": "string",
+            "reaction": "string"
         }
     ],
     "careplans": [

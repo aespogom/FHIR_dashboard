@@ -8,7 +8,7 @@ import os
 from typing import Union
 from dotenv import load_dotenv
 import requests
-import utils
+import backend.utils
 import pandas as pd
 
 load_dotenv()
@@ -32,7 +32,6 @@ def build_query_with_filter(resource: str,
   query = os.getenv("URL_SERVER")
 
   # Access resource
-  resource = resource.lower().capitalize()
   query = query + resource
 
   # Construct the datetime query
@@ -68,7 +67,7 @@ def create_dataframe(dataframe: pd.DataFrame,
   x_data = [ (name, data_type, is_list) for name, name_json, data_type, is_list, of_many, not_optional in properties if name == x_col]
   x_access = "['"+x_col+"']"
   
-  with open('src/backend/FHIR_dict.json') as fp:
+  with open('static/dicts/FHIR_dict.json') as fp:
     keys_FHIR = json.load(fp)
 
   if x_data[0][1] != str and x_data[0][1] != int and x_data[0][1].resource_type in keys_FHIR['DATA_TYPE'].keys():
@@ -127,9 +126,10 @@ def query_firely_server(resource: str,
         bundle = result.json()
         if bundle['total']:
             for entry in list(bundle['entry']):
-                registry = eval("utils."+resource.lower()+"."+resource+"(entry['resource'])")
+                registry = eval("backend.utils."+resource.lower()+"."+resource+"(entry['resource'])")
                 list_registries.append(registry)
             dataframe = create_dataframe(dataframe,x,y,list_registries)
+            print(dataframe)
         return dataframe
 
     result.raise_for_status()

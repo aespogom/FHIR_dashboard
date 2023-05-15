@@ -5,13 +5,7 @@ import plotly
 import plotly.express as px
 import plotly.graph_objects as go
 from flask_bootstrap import Bootstrap5
-
-# configs and received from frontend
-data_path = 'app\\static\\data\\' # this will probably be difference once we receive data from the database
-# graph_type = 'barchart'
-# resource = 'patients'
-# data_element_x = 'GENDER'
-# data_element_y = 'HEALTHCARE_EXPENSES'
+from backend.queries import query_firely_server
 
 app = Flask(__name__)
 bootstrap = Bootstrap5(app)
@@ -23,19 +17,22 @@ def cb():
     resource = data["resource"]
     data_element_x = data["data_element_x"]
     data_element_y = data["data_element_y"]
-    return gm(data_path, resource, graph_type, data_element_x, data_element_y)
+    return gm(resource, graph_type, data_element_x, data_element_y)
    
 @app.route('/')
 def index():
     # return render_template('index.html',  graphJSON=gm(data_path, resource, graph_type, data_element_x, data_element_y))
     return render_template('index.html')
 
-def gm(data_path, resource, graph_type, data_element_x, data_element_y):
+def gm(resource, graph_type, data_element_x, data_element_y):
     # read data and define dataframes
-    data = pd.read_csv(data_path + resource + '.csv')
+    if data_element_x != '':
+        data = query_firely_server(resource=resource, x=data_element_x, date_filter=False, date_from=None, date_to=None, y=data_element_y)
+    else:
+        data = query_firely_server(resource=resource, x=data_element_x, date_filter=False, date_from=None, date_to=None, y=None)
     x_var = data[data_element_x]
-    if data_element_y != '':
-        y_var = data[data_element_y]
+    y_var = data[data_element_y]
+    print(x_var)
 
     # Define the chart
     if graph_type == 'Line graph':

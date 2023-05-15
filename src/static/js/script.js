@@ -43,8 +43,8 @@ function showSelectResource() {
         <p> Now select the a resource for which you want to create a graph </p>
         <select class="form-select" id="select-resource" name="select-resource" value="select-resource">
         <option style="display: none">Resource</option>
-        <option value="Careplans">Careplans</option>
-        <option value="Allergies">Allergies</option>
+        <option value="CarePlans">CarePlans</option>
+        <option value="AllergyIntolerance">AllergyIntolerance</option>
         </select>
     `);
 }
@@ -90,9 +90,9 @@ function showSelectVariable(current_number_of_variables_selected, interface_text
 $("#create-graph").off("click").on("click", function() {
     var graph_type = $("#select-graph-type").val();
     var resource = $("#select-resource").val();
-    var data_element_x = $("#select-variable-0").val().toUpperCase();
+    var data_element_x = $("#select-variable-0").val().toLowerCase();
     if($("#select-variable-1").val()) {
-        var data_element_y = $("#select-variable-1").val().toUpperCase();
+        var data_element_y = $("#select-variable-1").val().toLowerCase();
     } else {
         var data_element_y = '';
     }
