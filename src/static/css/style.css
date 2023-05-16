@@ -1,0 +1,15 @@
+/* Custom styling */
+
+body {
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.graph-container {
+  transition: box-shadow .3s;
+}
+
+.graph-container:hover {
+  cursor: pointer;
+  box-shadow: 0 0 11px rgba(33, 33, 33, .2);
+}
+

@@ -3,3 +3,5 @@ pyodbc==4.0.32
 python_dotenv==1.0.0
 pandas==2.0.1
 fhirclient==4.1.0
+plotly==5.14.1
+bootstrap-flask==2.2.0
