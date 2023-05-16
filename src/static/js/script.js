@@ -53,7 +53,7 @@ function showSelectResource() {
         <option value="Medication">Medications</option>
         <option value="Observation">Observations</option>
         <option value="Procedure">Procedures</option>
-        <option value="RiskAssesment">Risk assesments</option>
+        <option value="RiskAssessment">Risk assesments</option>
         </select>
     `);
 }
