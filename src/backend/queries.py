@@ -129,7 +129,7 @@ def query_firely_server(resource: str,
                 if entry['resource']['resourceType']=='OperationOutcome':
                   print('This resource does not support this filter!')
                 else:
-                  registry = eval("utils."+resource.lower()+"."+resource+"(entry['resource'])")
+                  registry = eval("backend.utils."+resource.lower()+"."+resource+"(entry['resource'])")
                   list_registries.append(registry)
             dataframe = create_dataframe(dataframe,x,y,list_registries)
         return dataframe
