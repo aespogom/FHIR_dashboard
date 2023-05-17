@@ -4,7 +4,7 @@ var bar_graph = ['string'];
 var pie_chart = ['string'];
 
 export async function getResourceVariables(graph_type, resource_type, selected_variable) {
-    const response = await fetch('../../static/dicts/resource_variables.json');
+    const response = await fetch("../../static/dicts/resource_variables.json");
     const data = await response.json();
     for (var resource in data) {
         if (resource.toLowerCase() == resource_type.toLowerCase()) {

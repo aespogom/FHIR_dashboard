@@ -127,8 +127,11 @@ def query_firely_server(resource: str,
         bundle = result.json()
         if bundle['total']:
             for entry in list(bundle['entry']):
-                registry = eval("backend.utils."+resource.lower()+"."+resource+"(entry['resource'])")
-                list_registries.append(registry)
+                if entry['resource']['resourceType']=='OperationOutcome':
+                  print('This resource does not support this filter!')
+                else:
+                  registry = eval("backend.utils."+resource.lower()+"."+resource+"(entry['resource'])")
+                  list_registries.append(registry)
             dataframe = create_dataframe(dataframe,x,y,list_registries)
         return dataframe
 
@@ -137,10 +140,14 @@ def query_firely_server(resource: str,
 
 
 # # Define the input parameters from frontend/ploty
-# resource = 'Observation'
-# a=['identifier', 'status', 'category', 'code', 'valueQuantity', 'interpretation', 'bodySite', 'component']
-# b=None
+
+# with open('src/backend/FHIR_dict.json') as fp:
+#   keys_FHIR = json.load(fp)
+# list_resources = keys_FHIR.keys()
+# b = None
 # date_attribute = 'effectiveDateTime'
 # date_from=datetime(2022,5,23,0,0,0)
 # date_to=datetime(2023,5,10,0,0,0)
-# [print(query_firely_server(resource, x, date_attribute, date_from, date_to, b)) for x in a] 
+# for resource in list_resources:
+#   a = keys_FHIR.get(resource)[0].keys()
+#   [print(query_firely_server(resource, x, date_attribute, date_from, date_to, b)) for x in a] 
