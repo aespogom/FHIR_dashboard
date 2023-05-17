@@ -142,8 +142,8 @@
 
     },
     "FILTER_PARAMS": {
-        "AdverseEvent": ["category", "code", "location", "patient", "resultingeffect", "seriousness", "status", "substance"] ,
-        "AllergyIntolerance": ["category", "clinical-status", "code", "criticality", "patient", "severity", "type"],
+        "AdverseEvent": ["actuality", "category", "code", "location", "patient", "resultingeffect", "seriousness", "status"] ,
+        "AllergyIntolerance": ["category", "clinical-status", "code", "criticality", "patient", "severity", "type","verification-status"],
         "CarePlan": ["category", "condition", "goal", "intent", "patient", "status"],
         "ClaimResponse": ["disposition", "outcome", "patient", "status", "use"] ,
         "Condition": ["category", "body-site", "clinical-status", "code", "evidence", "patient", "severity", "stage", "verification-status"],
@@ -152,6 +152,7 @@
         "Medication": ["code", "form", "ingredient-code", "status"],
         "Observation": ["category", "code", "code-value-quantity", "data-absent-reason", "method", "patient", "value-quantity", "status"],
         "Procedure": ["category", "code", "patient", "reason-code", "status"],
-        "RiskAssessment": ["method", "patient", "probability", "risk"]
+        "RiskAssessment": ["method", "patient", "probability", "risk"],
+        "patient":["active", "family", "gender"]
     }
 }

@@ -50,7 +50,14 @@ def build_query_with_filter(resource: str,
     else:
       query = query+'&'
     for field, search_value in filters.items():
-      query = query+field+'='+search_value+'&'
+      if isinstance(search_value, dict):
+        for subfield, search in search_value.items():
+          if field!='patient':
+            query = query + 'patient._has:'+field+':patient:'+subfield+'='+search+'&'
+          else:
+            query = query+field+'.'+subfield+'='+search+'&'
+      else:
+        query = query+field+'='+search_value+'&'
     query = query[:-1]  
   print(query)
   return query
@@ -152,7 +159,7 @@ def query_firely_server(resource: str,
 
 
 
-# Define the input parameters from frontend/ploty
+# # Define the input parameters from frontend/ploty
 
 # with open('src/backend/FHIR_dict.json') as fp:
 #   keys_FHIR = json.load(fp)
@@ -169,5 +176,10 @@ def query_firely_server(resource: str,
 #   dict_filter = {}
 #   list_filters = filter_FHIR.get(resource)
 #   for f in list_filters:
-#      dict_filter[f] = 'test'
+#      if f=='patient':
+#         dict_filter[f]={'gender': 'other'}
+#         dict_filter[f]={'family': 'Donald'}
+#      else:
+#         dict_filter[f] = 'test'
+#   dict_filter['Observation']={'code':'test'}
 #   [print(query_firely_server(resource, x, date_attribute, date_from, date_to, b, dict_filter)) for x in a] 
