@@ -103,9 +103,12 @@ def create_dataframe(dataframe: pd.DataFrame,
   
   for registry in list_fhir:
       registry_as_json = registry.as_json()
-      x_value = eval("registry_as_json"+x_access) if registry_as_json.get(x_col) else None
-      y_value = eval("registry_as_json"+y_access) if y_col and registry_as_json.get(y_col) else None
-      dataframe.loc[len(dataframe)] = [str(x_value), y_value]
+      try:
+        x_value = eval("registry_as_json"+x_access) if registry_as_json.get(x_col) else None
+        y_value = eval("registry_as_json"+y_access) if y_col and registry_as_json.get(y_col) else None
+        dataframe.loc[len(dataframe)] = [str(x_value), y_value]
+      except:
+         print('There is an inconsistency in the database, skiping one registry')
 
   return dataframe
 
@@ -113,8 +116,8 @@ def create_dataframe(dataframe: pd.DataFrame,
 def query_firely_server(resource: str,
                         x: str,
                         date_filter: bool,
-                        date_from: Union[datetime, None],
-                        date_to: Union[datetime, None],
+                        date_from: Union[datetime, None] = None,
+                        date_to: Union[datetime, None] = None,
                         y: Union[str,None] = None,
                         filters: dict = None):
     '''Handles the query of a given resource to Firely server
@@ -168,9 +171,11 @@ def query_firely_server(resource: str,
 # keys_FHIR.pop("FILTER_PARAMS")
 # list_resources = keys_FHIR.keys()
 # b = None
-# date_attribute = True
-# date_from=datetime(2022,5,23,0,0,0)
-# date_to=datetime(2023,5,10,0,0,0)
+# # date_attribute = True
+# date_attribute = False
+
+# # date_from=datetime(2022,5,23,0,0,0)
+# # date_to=datetime(2023,5,10,0,0,0)
 # for resource in list_resources:
 #   a = keys_FHIR.get(resource)[0].keys()
 #   dict_filter = {}
@@ -182,4 +187,4 @@ def query_firely_server(resource: str,
 #      else:
 #         dict_filter[f] = 'test'
 #   dict_filter['Observation']={'code':'test'}
-#   [print(query_firely_server(resource, x, date_attribute, date_from, date_to, b, dict_filter)) for x in a] 
+#   [print(query_firely_server(resource, x, date_attribute, y=x)) for x in a] 
