@@ -16,7 +16,8 @@ load_dotenv()
 def build_query_with_filter(resource: str,
                             date_filter: bool,
                             date_from: Union[datetime, None],
-                            date_to: Union[datetime, None]):
+                            date_to: Union[datetime, None],
+                            filters: Union[dict, None]):
   '''Handles the query construction
   
   Args:
@@ -24,6 +25,7 @@ def build_query_with_filter(resource: str,
     date_col: A boolean indicating if there is a filter by datetime
     date_from: An optional datetime representing the minimum date
     date_to: An optional datetime representing the maximum date
+    filters: An optional dictionary representing the additional queries
   Returns:
     A string representing the request endpoint to call
   '''
@@ -34,7 +36,7 @@ def build_query_with_filter(resource: str,
   # Access resource
   query = query + resource
 
-  # Construct the datetime query
+  #Construct additional queries
   if date_from and date_filter:
     query = query + '?date=ge'+date_from.strftime("%Y-%m-%d")
     if date_to and date_filter:
@@ -42,6 +44,15 @@ def build_query_with_filter(resource: str,
   elif date_to and date_filter:
     query = query + '?date=le'+date_to.strftime("%Y-%m-%d")
   
+  if filters:
+    if not date_filter:
+      query = query+'?'
+    else:
+      query = query+'&'
+    for field, search_value in filters.items():
+      query = query+field+'='+search_value+'&'
+    query = query[:-1]  
+  print(query)
   return query
      
 
@@ -97,7 +108,8 @@ def query_firely_server(resource: str,
                         date_filter: bool,
                         date_from: Union[datetime, None],
                         date_to: Union[datetime, None],
-                        y: Union[str,None] = None):
+                        y: Union[str,None] = None,
+                        filters: dict = None):
     '''Handles the query of a given resource to Firely server
     and the retrieval of the response in an interpretable form
     Calls the function responsible of building the endpoint
@@ -110,6 +122,7 @@ def query_firely_server(resource: str,
       date_from: An optional datetime representing the minimum date
       date_to: An optional datetime representing the maximum date
       y: An optional string representing the name of the second resource attribute
+      filters: An optional dictionary representing the additional queries
     
     Raises:
       TypeError if the request is not successful
@@ -117,7 +130,8 @@ def query_firely_server(resource: str,
       A dataframe with the resource information filtered
     '''
 
-    query = build_query_with_filter(resource=resource, date_filter=date_filter, date_from=date_from, date_to=date_to)
+    query = build_query_with_filter(resource=resource, date_filter=date_filter, date_from=date_from, date_to=date_to, filters=filters)
+    
     result = requests.get(query)
     
     if result.status_code and result.status_code==200:
@@ -138,15 +152,22 @@ def query_firely_server(resource: str,
 
 
 
-# # Define the input parameters from frontend/ploty
+# Define the input parameters from frontend/ploty
 
 # with open('src/backend/FHIR_dict.json') as fp:
 #   keys_FHIR = json.load(fp)
+# keys_FHIR.pop('DATA_TYPE')
+# filter_FHIR = keys_FHIR.get("FILTER_PARAMS")
+# keys_FHIR.pop("FILTER_PARAMS")
 # list_resources = keys_FHIR.keys()
 # b = None
-# date_attribute = 'effectiveDateTime'
+# date_attribute = True
 # date_from=datetime(2022,5,23,0,0,0)
 # date_to=datetime(2023,5,10,0,0,0)
 # for resource in list_resources:
 #   a = keys_FHIR.get(resource)[0].keys()
-#   [print(query_firely_server(resource, x, date_attribute, date_from, date_to, b)) for x in a] 
+#   dict_filter = {}
+#   list_filters = filter_FHIR.get(resource)
+#   for f in list_filters:
+#      dict_filter[f] = 'test'
+#   [print(query_firely_server(resource, x, date_attribute, date_from, date_to, b, dict_filter)) for x in a] 
