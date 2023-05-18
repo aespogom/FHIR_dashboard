@@ -49,8 +49,52 @@ python -m flask run
 This will start the Flask development server and the application will be available at http://localhost:5000.
 
 
-## Usage
-TODO
+## Backend advance search examples
+The following list is a set of examples that the frontend can include in
+the call query_firely_server from src/backend/queries.py
+0. No query:
+    query_firely_server(resource, x, date_filter, y):
+        - resource (string): 'AdverseEvent'
+        - x (string): 'actuality'
+        - date_filter (bool): False
+        - y (string, optional): 'code'
+    
+    resulting endpoint: [URL_SERVER]/AdverseEvent
+
+1. Simple query by datetime:
+    query_firely_server(resource, x, date_filter, date_from, date_to, y, dict_filter):
+        - resource (string): 'AdverseEvent'
+        - x (string): 'actuality'
+        - date_filter (bool): True
+        - date_from (datetime, optional): datetime(2022, 5, 1, 0, 0)
+        - date_to (datetime, optional): datetime(2022, 5, 23, 0, 0)
+        - y (string, optional): None
+    
+    resulting endpoint: [URL_SERVER]/AdverseEvent??date=ge2022-05-1&date=le2023-05-23
+
+2. Advance query by datetime + relate to other resource:
+    query_firely_server(resource, x, date_filter, date_from, date_to, y, dict_filter):
+        - resource (string): 'AdverseEvent'
+        - x (string): 'actuality'
+        - date_filter (bool): True
+        - date_from (datetime, optional): datetime(2022, 5, 1, 0, 0)
+        - date_to (datetime, optional): datetime(2022, 5, 23, 0, 0)
+        - y (string, optional): None
+        - dict_filter (dict, optional): {
+            'actuality': 'test', 
+            'category': 'test', 
+            'code': 'test', 
+            'patient': {
+                'gender': 'other',
+                'family': 'Donald'
+            },
+            'Observation': {
+                'code': 'ABC-DEF'
+            }
+        }
+
+        resulting endpoint: [URL_SERVER]/AdverseEvent?date=ge2022-05-1&date=le2023-05-23&actuality=test&category=test&code=test&patient.gender=other&patient.family=Donald&patient._has:Observation:patient:code=ABC-DEF
+
 
 ## Contributing
 If you'd like to contribute to this project, please fork the repository and submit a pull request.
