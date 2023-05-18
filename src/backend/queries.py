@@ -81,22 +81,32 @@ def create_dataframe(dataframe: pd.DataFrame,
   '''
   
   properties = list_fhir[0].elementProperties()
-
   x_data = [ (name, data_type, is_list) for name, name_json, data_type, is_list, of_many, not_optional in properties if name == x_col]
+  index = 1
+  while not x_data and index < len(list_fhir)-1:
+    properties = list_fhir[index+1].elementProperties()
+    x_data = [ (name, data_type, is_list) for name, name_json, data_type, is_list, of_many, not_optional in properties if name == x_col]
+    index+=1
   x_access = "['"+x_col+"']"
   
   with open('static/dicts/resource_variables.json') as fp:
     keys_FHIR = json.load(fp)
+  fp.close()
 
-  if x_data[0][1] != str and x_data[0][1] != int and x_data[0][1].resource_type in keys_FHIR['DATA_TYPE'].keys():
+  if x_data and x_data[0][1] != str and x_data[0][1] != int and x_data[0][1].resource_type in keys_FHIR['DATA_TYPE'].keys():
     if x_data[0][2]:
       x_access = x_access+"[0]"
     x_access = x_access+keys_FHIR['DATA_TYPE'][x_data[0][1].resource_type]
 
   if y_col:
     y_data = [ (name, data_type, is_list) for name, name_json, data_type, is_list, of_many, not_optional in properties if name == y_col]
+    index = 1
+    while not y_data and index < len(list_fhir)-1:
+      properties = list_fhir[index+1].elementProperties()
+      y_data = [ (name, data_type, is_list) for name, name_json, data_type, is_list, of_many, not_optional in properties if name == y_col]
+      index+=1
     y_access = "['"+y_col+"']"
-    if y_data[0][1] != str and y_data[0][1] != int and y_data[0][1].resource_type in keys_FHIR['DATA_TYPE'].keys():
+    if y_data and y_data[0][1] != str and y_data[0][1] != int and y_data[0][1].resource_type in keys_FHIR['DATA_TYPE'].keys():
           if y_data[0][2]:
               y_access = y_access+"[0]"
           y_access = y_access+keys_FHIR['DATA_TYPE'][y_data[0][1].resource_type]
@@ -164,7 +174,7 @@ def query_firely_server(resource: str,
 
 # # Define the input parameters from frontend/ploty
 
-# with open('src/backend/FHIR_dict.json') as fp:
+# with open('src/static/dicts/resource_variables.json') as fp:
 #   keys_FHIR = json.load(fp)
 # keys_FHIR.pop('DATA_TYPE')
 # filter_FHIR = keys_FHIR.get("FILTER_PARAMS")
@@ -187,4 +197,5 @@ def query_firely_server(resource: str,
 #      else:
 #         dict_filter[f] = 'test'
 #   dict_filter['Observation']={'code':'test'}
-#   [print(query_firely_server(resource, x, date_attribute, y=x)) for x in a] 
+#   # [print(query_firely_server(resource, x, date_attribute, y=x)) for x in a] 
+# print(query_firely_server('Observation', 'bodySite', date_attribute, y='interpretation'))
