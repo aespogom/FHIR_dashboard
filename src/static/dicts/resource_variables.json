@@ -1,5 +1,6 @@
 {
     "AdverseEvent":[{
+        "amountvalue" : "string", 
         "actuality": "string",
         "category": "string",
         "event": "string",
@@ -12,6 +13,7 @@
         "suspectEntity": "string"
     }],
     "AllergyIntolerance": [{
+        "amountvalue" : "int", 
         "clinicalStatus": "string",
         "verificationStatus": "string",
         "type": "string",
@@ -22,6 +24,7 @@
         "code": "string"
     }],
     "CarePlan": [{
+        "amountvalue" : "string",
         "status": "string",
         "intent": "string",
         "category": "string",
@@ -35,6 +38,7 @@
         "activity": "string"
     }],
     "ClaimResponse":[{
+        "amountvalue" : "string",
         "status": "string",
         "type": "string",
         "subType": "string",
@@ -47,6 +51,7 @@
         "error": "string"
     }],
     "Condition":[{
+        "amountvalue" : "string",
         "clinicalStatus": "string",
         "verificationStatus": "string",
         "category": "string",
@@ -58,6 +63,7 @@
         "note": "string"
     }],
     "DetectedIssue":[{
+        "amountvalue" : "string",
         "status": "string",
         "code": "string",
         "detail": "string",
@@ -66,6 +72,7 @@
         "mitigation": "string"
     }],
     "InsurancePlan":[{
+        "amountvalue" : "string",
         "status": "string",
         "type": "string",
         "name": "string",
@@ -74,6 +81,7 @@
         "plan": "string"
     }],
     "Medication":[{
+        "amountvalue" : "string",
         "code": "string",
         "status": "string",
         "form": "string",
@@ -81,6 +89,7 @@
         "ingredient": "string"
     }],
     "Observation":[{
+        "amountvalue" : "string",
         "valueQuantity": "int",
         "dataAbsentReason": "string",
         "interpretation": "string",
@@ -91,6 +100,7 @@
         "status": "string"
     }],
     "Procedure":[{
+        "amountvalue" : "string",
         "status": "string",
         "statusReason": "string",
         "reasonCode":"string",
@@ -101,6 +111,7 @@
         "note": "string"
     }],
     "RiskAssessment":[{
+        "amountvalue" : "string",
         "status": "string",
         "code": "string",
         "condition": "string",
