@@ -122,3 +122,25 @@ function cb(data) {
         },
     })
 }
+
+$("#ai-submit").click(function () {
+    aigpt($("#ai-prompt").val());
+})
+
+function aigpt(prompt) {
+    $.ajax({
+        type: "POST",
+        url: "/generate",
+        data: JSON.stringify({
+            "prompt": prompt
+        }),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function (response) {
+            console.log(response);
+            if (response.choices && response.choices.length) {
+                $("#ai-result").text(response.choices[0].text);
+            }
+        },
+    })
+  }

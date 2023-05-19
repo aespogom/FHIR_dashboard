@@ -4,6 +4,7 @@ import json
 import plotly
 import plotly.express as px
 import plotly.graph_objects as go
+import openai
 from flask_bootstrap import Bootstrap5
 from backend.queries import query_firely_server
 
@@ -18,7 +19,19 @@ def cb():
     data_element_x = data["data_element_x"]
     data_element_y = data["data_element_y"]
     return gm(resource, graph_type, data_element_x, data_element_y)
-   
+
+@app.route('/generate', methods=['POST'])
+def ai():
+    data = request.get_json()
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=data["prompt"],
+        temperature=1, 
+        max_tokens=1000
+    )
+    return response
+
+
 @app.route('/')
 def index():
     return render_template('index.html')

@@ -20,6 +20,7 @@
       </p>
       <button id="add-graph" type="button" class="btn btn-primary">Add a new graph</button>
       <button id="create-graph" type="button" class="btn btn-primary">Go</button>
+      <button id="AI-help" type="button" class="btn btn-success rounded-circle"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">?</button>
       <div id="select-graph-div">
 
       </div>
@@ -61,6 +62,33 @@
   </div>
 </div>
 
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">AI help tool</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <label class="d-block">Enter your query</label>
+        <div class="row mb-3">
+          <div class="col">
+            <input id="ai-prompt" type="text" class="form-control" placeholder=""> 
+          </div>
+          <div class="col-auto">
+            <button id="ai-submit" type="button" class="btn btn-primary">&rarr;</button>
+          </div>
+        </div>
+        
+        <label class="d-block">Result</label>
+        <textarea id="ai-result" rows="8" class="form-control bg-light" readonly></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 {% endblock %}
