@@ -25,11 +25,10 @@ def index():
 
 def gm(resource, graph_type, data_element_x, data_element_y):
     # read data and define dataframes
-    if data_element_x != '':
+    if data_element_y != '' or data_element_y != 'amountvalue':
         data = query_firely_server(resource=resource, x=data_element_x, y=data_element_y, date_filter=False)
     else:
         data = query_firely_server(resource=resource, x=data_element_x, date_filter=False)
-    
     
     if data_element_y == 'amountvalue':
         df = data.groupby(data_element_x)[data_element_y].sum().reset_index()
