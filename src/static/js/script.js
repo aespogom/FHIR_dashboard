@@ -111,6 +111,8 @@ $("#create-graph").off("click").on("click", function() {
 
 
 function cb(data) {
+    $("#Go-button-text").hide()
+    $("#Go-button-spinner").show()
     $.ajax({
         type: "POST",
         url: "/callback",
@@ -118,6 +120,8 @@ function cb(data) {
         contentType: "application/json",
         dataType: 'json',
         success: function (data) {
+            $("#Go-button-text").show()
+            $("#Go-button-spinner").hide()
             Plotly.newPlot(graph_location[0], data, {staticPlot: true});;
         },
     })
@@ -127,20 +131,27 @@ $("#ai-submit").click(function () {
     aigpt($("#ai-prompt").val());
 })
 
+var preSet = "Give the answer in the following format: type of plot, type of FHIR resource, type of FHIR variables, seperated with;"
+
 function aigpt(prompt) {
+    $("#ai-button-text").hide()
+    $("#ai-button-spinner").show() 
+    prompt = preSet + prompt
     $.ajax({
         type: "POST",
         url: "/generate",
-        data: JSON.stringify({
+        data: JSON.stringify({ 
             "prompt": prompt
         }),
         contentType: "application/json",
         dataType: 'json',
         success: function (response) {
             console.log(response);
+            $("#ai-button-text").show()
+            $("#ai-button-spinner").hide()
             if (response.choices && response.choices.length) {
                 $("#ai-result").text(response.choices[0].text);
             }
         },
     })
-  }
+}
