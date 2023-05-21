@@ -1,6 +1,7 @@
 {
     "AdverseEvent": [
         {
+            "amountvalue": "string",
             "actuality": "string",
             "category": "string",
             "event": "string",
@@ -15,6 +16,7 @@
     ],
     "AllergyIntolerance": [
         {
+            "amountvalue": "int",
             "clinicalStatus": "string",
             "verificationStatus": "string",
             "type": "string",
@@ -27,6 +29,7 @@
     ],
     "CarePlan": [
         {
+            "amountvalue": "string",
             "status": "string",
             "intent": "string",
             "category": "string",
@@ -42,6 +45,7 @@
     ],
     "ClaimResponse": [
         {
+            "amountvalue": "string",
             "status": "string",
             "type": "string",
             "subType": "string",
@@ -56,6 +60,7 @@
     ],
     "Condition": [
         {
+            "amountvalue": "string",
             "clinicalStatus": "string",
             "verificationStatus": "string",
             "category": "string",
@@ -69,6 +74,7 @@
     ],
     "DetectedIssue": [
         {
+            "amountvalue": "string",
             "status": "string",
             "code": "string",
             "detail": "string",
@@ -79,6 +85,7 @@
     ],
     "InsurancePlan": [
         {
+            "amountvalue": "string",
             "status": "string",
             "type": "string",
             "name": "string",
@@ -89,6 +96,7 @@
     ],
     "Medication": [
         {
+            "amountvalue": "string",
             "code": "string",
             "status": "string",
             "form": "string",
@@ -98,6 +106,7 @@
     ],
     "Observation": [
         {
+            "amountvalue": "string",
             "valueQuantity": "int",
             "dataAbsentReason": "string",
             "interpretation": "string",
@@ -110,6 +119,7 @@
     ],
     "Procedure": [
         {
+            "amountvalue": "string",
             "status": "string",
             "statusReason": "string",
             "reasonCode": "string",
@@ -122,6 +132,7 @@
     ],
     "RiskAssessment": [
         {
+            "amountvalue": "string",
             "status": "string",
             "code": "string",
             "condition": "string",
@@ -161,5 +172,99 @@
         "ClaimResponsePayment": "['amount']['value']",
         "CarePlanActivity": "['detail']['code']['coding'][0]['code']",
         "AdverseEventSuspectEntity": "['causality']['assessment']['coding'][0]['code']"
+    },
+    "FILTER_PARAMS": {
+        "AdverseEvent": [
+            "actuality",
+            "category",
+            "code",
+            "location",
+            "patient",
+            "resultingeffect",
+            "seriousness",
+            "status"
+        ],
+        "AllergyIntolerance": [
+            "category",
+            "clinical-status",
+            "code",
+            "criticality",
+            "patient",
+            "severity",
+            "type",
+            "verification-status"
+        ],
+        "CarePlan": [
+            "category",
+            "condition",
+            "goal",
+            "intent",
+            "patient",
+            "status"
+        ],
+        "ClaimResponse": [
+            "disposition",
+            "outcome",
+            "patient",
+            "status",
+            "use"
+        ],
+        "Condition": [
+            "category",
+            "body-site",
+            "clinical-status",
+            "code",
+            "evidence",
+            "patient",
+            "severity",
+            "stage",
+            "verification-status"
+        ],
+        "DetectedIssue": [
+            "category",
+            "code",
+            "patient",
+            "status"
+        ],
+        "InsurancePlan": [
+            "address",
+            "name",
+            "status",
+            "type"
+        ],
+        "Medication": [
+            "code",
+            "form",
+            "ingredient-code",
+            "status"
+        ],
+        "Observation": [
+            "category",
+            "code",
+            "code-value-quantity",
+            "data-absent-reason",
+            "method",
+            "patient",
+            "value-quantity",
+            "status"
+        ],
+        "Procedure": [
+            "category",
+            "code",
+            "patient",
+            "reason-code",
+            "status"
+        ],
+        "RiskAssessment": [
+            "method",
+            "patient",
+            "probability",
+            "risk"
+        ],
+        "patient": [
+            "active",
+            "family",
+            "gender"
+        ]
     }
 }

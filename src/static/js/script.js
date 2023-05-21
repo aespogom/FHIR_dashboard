@@ -113,7 +113,7 @@ function showSelectDates() {
         <p> Optionally you can select a start and end date for your data selection to plot a part of the data </p>
         <label for="start-date">Start Date:</label>
         <input type="date" id="start-date" name="start-date">
-
+        <br>
         <label for="end-date">End Date:</label>
         <input type="date" id="end-date" name="end-date">
     `);
@@ -175,11 +175,21 @@ $("#create-graph").off("click").on("click", function () {
     var end_date = $('#end-date').val() ? new Date($('#end-date').val()) : null;
     var additional_filter_resource = $("#select-additional-filter-resource").val() || null;
     var additional_filter_variable = $("#select-additional-filter-variable").val() || null;
-    var data = JSON.stringify({ graph_type: graph_type, resource: resource, data_element_x: data_element_x, data_element_y: data_element_y, start_date: start_date, end_date: end_date, additional_filter_resource: additional_filter_resource, additional_filter_variable: additional_filter_variable });
-    cb(data);
+    var data = JSON.stringify({ graph_type: graph_type, resource: resource, data_element_x: data_element_x, data_element_y: data_element_y, start_date: start_date, end_date: end_date, additional_filter_resource: additional_filter_resource, additional_filter_variable: additional_filter_variable, graph_location: graph_location.attr("id") });
+    updateGraphStorage(data);
+    cb(data, graph_location.attr("id"));
+
 });
 
-function cb(data) {
+function updateGraphStorage(graph) {
+    var graph_data = localStorage.getItem("graphs");
+    var graph_data = graph_data ? JSON.parse(graph_data) : [];
+    graph_data.push(graph);
+    var updated_graph_data = JSON.stringify(graph_data);
+    localStorage.setItem("graphs", updated_graph_data);
+}
+
+function cb(data, graph_location) {
     $.ajax({
         type: "POST",
         url: "/callback",
@@ -187,7 +197,8 @@ function cb(data) {
         contentType: "application/json",
         dataType: 'json',
         success: function (data) {
-            Plotly.newPlot(graph_location[0], data);
+            Plotly.newPlot(graph_location, data);
+
         },
     });
 }
@@ -202,3 +213,54 @@ $(window).on('resize', function () {
         Plotly.relayout(this, { width: parentWidth, height: parentHeight });
     });
 });
+
+$("#generate-data").click(function () {
+    var jsonString = '{"graph_type":"Pie chart","resource":"AllergyIntolerance","data_element_x":"text","data_element_y":"","start_date":null,"end_date":null,"additional_filter_resource":"Resource","additional_filter_variable":null}';
+    var dataArray = [jsonString, jsonString, jsonString];
+    localStorage.setItem("graphs", JSON.stringify(dataArray));
+})
+
+$('#export').click(function () {
+    var graph_data = localStorage.getItem('graphs');
+    var filename = 'dashboard.json';
+    var blob = new Blob([graph_data], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+});
+
+$('#import').click(function () {
+    var input = document.createElement('input');
+    input.type = 'file';
+    input.onchange = function (e) {
+        var file = e.target.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function () {
+            var fileContent = reader.result;
+            localStorage.setItem('graphs', fileContent);
+            displayImportedGraphs();
+        };
+        reader.readAsText(file);
+    };
+    input.click();
+});
+
+function displayImportedGraphs() {
+    var graphs = localStorage.getItem('graphs');
+
+    if (graphs) {
+        var graphs_array = JSON.parse(graphs);
+        graphs_array.forEach(function (graph) {
+            var graph_location_for_import = JSON.parse(graph)["graph_location"];
+            cb(graph, graph_location_for_import);
+        });
+    } else {
+        console.log('No graphs found in localStorage.');
+    }
+}
