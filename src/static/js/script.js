@@ -1,10 +1,9 @@
-// Custom Javascript
 import { getResourceVariables, resetCurrentVariablesSelected } from '/../static/js/logic-modules/data-selection-glm.js';
 
-var graph_location
-var graph_type
-var resource_type
-
+var graph_location;
+var graph_type;
+var resource_type;
+var filter_resouce_type;
 
 $("#add-graph").click(function () {
     $('[id^="graph-location"]').bind("click", function () {
@@ -13,54 +12,58 @@ $("#add-graph").click(function () {
         $(graph_location).addClass("bg-secondary").removeClass("bg-light");
         $("#add-graph").next().nextAll().empty();
         showSelectGraph();
-    })
-})
+    });
+});
 
 function showSelectGraph() {
     $("#select-graph-div").html(`
         <br>
         <p> Select the type of graph you want to create </p>
-        <select class="form-select" id="select-graph-type" name=select-graph-type" value="select-graph-type">
-        <option style="display: none">Graph type</option>
-        <option value="Bar graph">Bar graph</option>
-        <option value="Line graph">Line graph</option>
-        <option value="Pie chart">Pie chart</option>
+        <select class="form-select" id="select-graph-type" name="select-graph-type" value="select-graph-type">
+            <option style="display: none">Graph type</option>
+            <option value="Bar graph">Bar graph</option>
+            <option value="Line graph">Line graph</option>
+            <option value="Pie chart">Pie chart</option>
+            <option value="Scatter plot">Scatter plot</option>
         </select>
     `);
 }
 
-$(document.body).off('change', '#select-graph-type').on('change', "#select-graph-type", function () {
+function handleGraphTypeChange() {
     $("#select-resource-div").empty();
-    $("#select-variabele-div").empty();
+    $("#select-variabele-div").add($("#select-variabele-div").nextAll()).empty();
     resetCurrentVariablesSelected();
     graph_type = $("#select-graph-type option:selected").val();
     showSelectResource();
-});
+}
+
+$(document.body).off('change', '#select-graph-type').on('change', "#select-graph-type", handleGraphTypeChange);
 
 function showSelectResource() {
     $("#select-resource-div").html(`
         <br>
         <p> Now select the a resource for which you want to create a graph </p>
         <select class="form-select" id="select-resource" name="select-resource" value="select-resource">
-        <option style="display: none">Resource</option>
-        <option value="AdverseEvent">Adverse event</option>
-        <option value="AllergyIntolerance">Allergies</option>
-        <option value="CarePlan">Careplans</option>
-        <option value="ClaimResponse">Claims</option>
-        <option value="Condition">Conditions</option>
-        <option value="DetectedIssue">Detected issues</option>
-        <option value="InsurancePlan">Insurance plans</option>
-        <option value="Medication">Medications</option>
-        <option value="Observation">Observations</option>
-        <option value="Procedure">Procedures</option>
-        <option value="RiskAssessment">Risk assesments</option>
+            <option style="display: none">Resource</option>
+            <option value="AdverseEvent">Adverse event</option>
+            <option value="AllergyIntolerance">Allergies</option>
+            <option value="CarePlan">Careplans</option>
+            <option value="ClaimResponse">Claims</option>
+            <option value="Condition">Conditions</option>
+            <option value="DetectedIssue">Detected issues</option>
+            <option value="InsurancePlan">Insurance plans</option>
+            <option value="Medication">Medications</option>
+            <option value="Observation">Observations</option>
+            <option value="Procedure">Procedures</option>
+            <option value="RiskAssessment">Risk assessments</option>
         </select>
     `);
 }
 
-$(document.body).off('change', '#select-resource').on('change', "#select-resource", async function () {
+async function handleResourceChange() {
     $(this).off('change');
     $("#select-variabele-div").empty();
+    $("#select-variabele-div").nextAll().empty();
     resetCurrentVariablesSelected();
     resource_type = $("#select-resource option:selected").val();
 
@@ -69,46 +72,112 @@ $(document.body).off('change', '#select-resource').on('change', "#select-resourc
         if (interface_text != 1) {
             showSelectVariable(current_number_of_variables_selected, interface_text, possible_variables);
         }
-        
     }
 
     await getPossibleVariables();
 
     $(document.body).off('change', '#select-variable-0').on('change', "#select-variable-0", async function () {
         $(this).off('change');
-        $(this).nextAll().remove();
+        if (graph_type !== "Pie chart") {
+            $(this).nextAll().remove();
+            $("#select-variabele-div").nextAll().empty();
+        }
         var selected_variable = $("#select-variable-0 option:selected").val();
         await getPossibleVariables(selected_variable);
-    })
-});
+    });
+}
+
+$(document.body).off('change', '#select-resource').on('change', "#select-resource", handleResourceChange);
 
 function showSelectVariable(current_number_of_variables_selected, interface_text, possible_variables) {
     var select_string = `
         <br>
-        <p> ` + interface_text + ` </p>
-        <select class="form-select" id="select-variable-` + current_number_of_variables_selected + `" name="select-variabele-` + current_number_of_variables_selected + `" value="select-variabele-` + current_number_of_variables_selected + `">
-        <option style="display: none">Variabele</option>
-        `;
-    possible_variables.forEach(variabele => {
-        select_string += '<option value="' + variabele + '">' + variabele + '</option>'
+        <p> ${interface_text} </p>
+        <select class="form-select" id="select-variable-${current_number_of_variables_selected}" name="select-variabele-${current_number_of_variables_selected}" value="select-variabele-${current_number_of_variables_selected}">
+            <option style="display: none">Variable</option>`;
+    possible_variables.forEach(variable => {
+        select_string += `<option value="${variable}">${variable}</option>`;
     });
-    select_string += "</select >"
+    select_string += "</select>";
     $("#select-variabele-div").append(select_string);
 }
 
-$("#create-graph").off("click").on("click", function() {
+$(document.body).off('change', '#select-variabele-div select:last').on('change', "#select-variabele-div select:last", function () {
+    showSelectDates();
+    showAdditionalFilteringResource();
+});
+
+function showSelectDates() {
+    $("#select-dates-div").html(`
+        <br>
+        <p> Optionally you can select a start and end date for your data selection to plot a part of the data </p>
+        <label for="start-date">Start Date:</label>
+        <input type="date" id="start-date" name="start-date">
+
+        <label for="end-date">End Date:</label>
+        <input type="date" id="end-date" name="end-date">
+    `);
+}
+
+function showAdditionalFilteringResource() {
+    $("#select-additional-filters").html(`
+        <br>
+        <p> Or you can filter your data by another resource <br> For this, first select a resource </p>
+        <select class="form-select" id="select-additional-filter-resource" name="select-additional-filter-resource" value="select-additional-filter-resource">
+            <option style="display: none">Resource</option>
+            <option value="AdverseEvent">Adverse event</option>
+            <option value="AllergyIntolerance">Allergies</option>
+            <option value="CarePlan">Careplans</option>
+            <option value="ClaimResponse">Claims</option>
+            <option value="Condition">Conditions</option>
+            <option value="DetectedIssue">Detected issues</option>
+            <option value="InsurancePlan">Insurance plans</option>
+            <option value="Medication">Medications</option>
+            <option value="Observation">Observations</option>
+            <option value="Procedure">Procedures</option>
+            <option value="RiskAssessment">Risk assessments</option>
+        </select>
+    `);
+}
+
+$(document.body).off('change', '#select-additional-filter-resource').on('change', "#select-additional-filter-resource", function () {
+    filter_resouce_type = $("#select-additional-filter-resource").val();
+    showAdditionalFilteringVariable();
+});
+
+async function getPossibleFilterVariables() {
+    var possible_filter_variables = await getResourceVariables(graph_type, filter_resouce_type);
+    return possible_filter_variables[2];
+}
+
+function showAdditionalFilteringVariable() {
+    var possible_filter_variables = getPossibleFilterVariables();
+    var select_string = `
+        <br>
+        <p> And select a variable </p>
+        <select class="form-select" id="select-additional-filter-variable" name="select-additional-filter-variable" value="select-additional-filter-variable">
+            <option style="display: none">Variable</option>`;
+    possible_filter_variables.then((value) => {
+        value.forEach(variable => {
+            select_string += `<option value="${variable}">${variable}</option>`;
+        });
+        select_string += "</select>";
+        $("#select-additional-filters").append(select_string);
+    });
+}
+
+$("#create-graph").off("click").on("click", function () {
     var graph_type = $("#select-graph-type").val();
     var resource = $("#select-resource").val();
     var data_element_x = $("#select-variable-0").val().toLowerCase();
-    if($("#select-variable-1").val()) {
-        var data_element_y = $("#select-variable-1").val().toLowerCase();
-    } else {
-        var data_element_y = '';
-    }
-    var data = JSON.stringify({graph_type: graph_type, resource: resource, data_element_x: data_element_x, data_element_y: data_element_y});
+    var data_element_y = $("#select-variable-1").val()?.toLowerCase() || '';
+    var start_date = $('#start-date').val() ? new Date($('#start-date').val()) : null;
+    var end_date = $('#end-date').val() ? new Date($('#end-date').val()) : null;
+    var additional_filter_resource = $("#select-additional-filter-resource").val() || null;
+    var additional_filter_variable = $("#select-additional-filter-variable").val() || null;
+    var data = JSON.stringify({ graph_type: graph_type, resource: resource, data_element_x: data_element_x, data_element_y: data_element_y, start_date: start_date, end_date: end_date, additional_filter_resource: additional_filter_resource, additional_filter_variable: additional_filter_variable });
     cb(data);
-})
-
+});
 
 function cb(data) {
     $.ajax({
@@ -118,7 +187,18 @@ function cb(data) {
         contentType: "application/json",
         dataType: 'json',
         success: function (data) {
-            Plotly.newPlot(graph_location[0], data, {staticPlot: true});;
+            Plotly.newPlot(graph_location[0], data);
         },
-    })
+    });
 }
+
+$(window).on('resize', function () {
+    var graphs = $(".js-plotly-plot");
+
+    graphs.each(function () {
+        var parentWidth = $(this).parent().width();
+        var parentHeight = $(this).parent().height();
+
+        Plotly.relayout(this, { width: parentWidth, height: parentHeight });
+    });
+});

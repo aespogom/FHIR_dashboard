@@ -29,8 +29,7 @@ def build_query_with_filter(resource: str,
   '''
   
   # Initialize query
-  # query = os.getenv("URL_SERVER")
-  query = 'https://firelyasserver.azurewebsites.net/'
+  query = os.getenv("URL_SERVER")
 
   # Access resource
   query = query + resource

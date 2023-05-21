@@ -1,130 +1,152 @@
 {
-    "AdverseEvent":[{
-        "actuality": "string",
-        "category": "string",
-        "event": "string",
-        "resultingCondition": "string",
-        "location": "string",
-        "seriousness": "string",
-        "severity": "string",
-        "outcome": "string",
-        "recorder": "string",
-        "suspectEntity": "string"
-    }],
-    "AllergyIntolerance": [{
-        "clinicalStatus": "string",
-        "verificationStatus": "string",
-        "type": "string",
-        "text": "string",
-        "reaction": "string",
-        "category": "string",
-        "criticality": "string",
-        "code": "string"
-    }],
-    "CarePlan": [{
-        "status": "string",
-        "intent": "string",
-        "category": "string",
-        "title": "string",
-        "description": "string",
-        "contributor": "string",
-        "careTeam": "string",
-        "addresses": "string",
-        "supportingInfo": "string",
-        "goal": "string",
-        "activity": "string"
-    }],
-    "ClaimResponse":[{
-        "status": "string",
-        "type": "string",
-        "subType": "string",
-        "use": "string",
-        "insurer": "string",
-        "outcome": "string",
-        "disposition": "string",
-        "total": "string",
-        "payment": "string",
-        "error": "string"
-    }],
-    "Condition":[{
-        "clinicalStatus": "string",
-        "verificationStatus": "string",
-        "category": "string",
-        "severity": "string",
-        "code": "string",
-        "bodySite": "string",
-        "stage": "string",
-        "evidence": "string",
-        "note": "string"
-    }],
-    "DetectedIssue":[{
-        "status": "string",
-        "code": "string",
-        "detail": "string",
-        "severity": "string",
-        "evidence": "string",
-        "mitigation": "string"
-    }],
-    "InsurancePlan":[{
-        "status": "string",
-        "type": "string",
-        "name": "string",
-        "alias": "string",
-        "coverage": "string",
-        "plan": "string"
-    }],
-    "Medication":[{
-        "code": "string",
-        "status": "string",
-        "form": "string",
-        "amount": "int",
-        "ingredient": "string"
-    }],
-    "Observation":[{
-        "valueQuantity": "int",
-        "dataAbsentReason": "string",
-        "interpretation": "string",
-        "note": "string",
-        "bodySite": "string",
-        "component": "string",
-        "code": "string",
-        "status": "string"
-    }],
-    "Procedure":[{
-        "status": "string",
-        "statusReason": "string",
-        "reasonCode":"string",
-        "category": "string",
-        "code": "string",
-        "bodySite": "string",
-        "outcome": "string",
-        "note": "string"
-    }],
-    "RiskAssessment":[{
-        "status": "string",
-        "code": "string",
-        "condition": "string",
-        "reasonCode": "string",
-        "prediction": "string",
-        "mitigation": "string",
-        "note": "string"
-    }],
+    "AdverseEvent": [
+        {
+            "actuality": "string",
+            "category": "string",
+            "event": "string",
+            "resultingCondition": "string",
+            "location": "string",
+            "seriousness": "string",
+            "severity": "string",
+            "outcome": "string",
+            "recorder": "string",
+            "suspectEntity": "string"
+        }
+    ],
+    "AllergyIntolerance": [
+        {
+            "clinicalStatus": "string",
+            "verificationStatus": "string",
+            "type": "string",
+            "text": "string",
+            "reaction": "string",
+            "category": "string",
+            "criticality": "string",
+            "code": "string"
+        }
+    ],
+    "CarePlan": [
+        {
+            "status": "string",
+            "intent": "string",
+            "category": "string",
+            "title": "string",
+            "description": "string",
+            "contributor": "string",
+            "careTeam": "string",
+            "addresses": "string",
+            "supportingInfo": "string",
+            "goal": "string",
+            "activity": "string"
+        }
+    ],
+    "ClaimResponse": [
+        {
+            "status": "string",
+            "type": "string",
+            "subType": "string",
+            "use": "string",
+            "insurer": "string",
+            "outcome": "string",
+            "disposition": "string",
+            "total": "string",
+            "payment": "string",
+            "error": "string"
+        }
+    ],
+    "Condition": [
+        {
+            "clinicalStatus": "string",
+            "verificationStatus": "string",
+            "category": "string",
+            "severity": "string",
+            "code": "string",
+            "bodySite": "string",
+            "stage": "string",
+            "evidence": "string",
+            "note": "string"
+        }
+    ],
+    "DetectedIssue": [
+        {
+            "status": "string",
+            "code": "string",
+            "detail": "string",
+            "severity": "string",
+            "evidence": "string",
+            "mitigation": "string"
+        }
+    ],
+    "InsurancePlan": [
+        {
+            "status": "string",
+            "type": "string",
+            "name": "string",
+            "alias": "string",
+            "coverage": "string",
+            "plan": "string"
+        }
+    ],
+    "Medication": [
+        {
+            "code": "string",
+            "status": "string",
+            "form": "string",
+            "amount": "int",
+            "ingredient": "string"
+        }
+    ],
+    "Observation": [
+        {
+            "valueQuantity": "int",
+            "dataAbsentReason": "string",
+            "interpretation": "string",
+            "note": "string",
+            "bodySite": "string",
+            "component": "string",
+            "code": "string",
+            "status": "string"
+        }
+    ],
+    "Procedure": [
+        {
+            "status": "string",
+            "statusReason": "string",
+            "reasonCode": "string",
+            "category": "string",
+            "code": "string",
+            "bodySite": "string",
+            "outcome": "string",
+            "note": "string"
+        }
+    ],
+    "RiskAssessment": [
+        {
+            "status": "string",
+            "code": "string",
+            "condition": "string",
+            "reasonCode": "string",
+            "prediction": "string",
+            "mitigation": "string",
+            "note": "string"
+        }
+    ],
     "DATA_TYPE": {
-        "Address":  "['text']",
-        "Annotation":  "['text']",
+        "Address": "['text']",
+        "Annotation": "['text']",
         "Attachment": "['contentType']",
         "AllergyIntoleranceReaction": "['severity']",
         "CodeableConcept": "['coding'][0]['code']",
         "CodeableReference": "['reference'][0]['display']",
         "Coding": "['coding'][0]['code']",
-        "ContactPoint":  "['value']",
+        "ContactPoint": "['value']",
         "HumanName": "['text']",
         "Identifier": "['type'][0]['coding'][0]['code']",
         "Money": "['value']",
         "Quantity": "['value']",
-        "Range": "['high']", 
-        "Ratio": "['numerator']", 
-        "RatioRange": "['numerator']", 
+        "Range": "['high']",
+        "Ratio": "['numerator']",
+        "RatioRange": "['numerator']",
         "Reference": "['reference']",
         "RiskAssessmentPrediction": "['outcome']",
         "MedicationIngredient": "['itemCodeableConcept']['coding'][0]['code']",
@@ -139,6 +161,99 @@
         "ClaimResponsePayment": "['amount']['value']",
         "CarePlanActivity": "['detail']['code']['coding'][0]['code']",
         "AdverseEventSuspectEntity": "['causality']['assessment']['coding'][0]['code']"
-
+    },
+    "FILTER_PARAMS": {
+        "AdverseEvent": [
+            "actuality",
+            "category",
+            "code",
+            "location",
+            "patient",
+            "resultingeffect",
+            "seriousness",
+            "status"
+        ],
+        "AllergyIntolerance": [
+            "category",
+            "clinical-status",
+            "code",
+            "criticality",
+            "patient",
+            "severity",
+            "type",
+            "verification-status"
+        ],
+        "CarePlan": [
+            "category",
+            "condition",
+            "goal",
+            "intent",
+            "patient",
+            "status"
+        ],
+        "ClaimResponse": [
+            "disposition",
+            "outcome",
+            "patient",
+            "status",
+            "use"
+        ],
+        "Condition": [
+            "category",
+            "body-site",
+            "clinical-status",
+            "code",
+            "evidence",
+            "patient",
+            "severity",
+            "stage",
+            "verification-status"
+        ],
+        "DetectedIssue": [
+            "category",
+            "code",
+            "patient",
+            "status"
+        ],
+        "InsurancePlan": [
+            "address",
+            "name",
+            "status",
+            "type"
+        ],
+        "Medication": [
+            "code",
+            "form",
+            "ingredient-code",
+            "status"
+        ],
+        "Observation": [
+            "category",
+            "code",
+            "code-value-quantity",
+            "data-absent-reason",
+            "method",
+            "patient",
+            "value-quantity",
+            "status"
+        ],
+        "Procedure": [
+            "category",
+            "code",
+            "patient",
+            "reason-code",
+            "status"
+        ],
+        "RiskAssessment": [
+            "method",
+            "patient",
+            "probability",
+            "risk"
+        ],
+        "patient": [
+            "active",
+            "family",
+            "gender"
+        ]
     }
 }
