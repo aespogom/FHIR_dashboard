@@ -25,18 +25,22 @@ def cb():
    
 @app.route('/')
 def index():
-    # return render_template('index.html',  graphJSON=gm(data_path, resource, graph_type, data_element_x, data_element_y))
     return render_template('index.html')
 
 def gm(resource, graph_type, data_element_x, data_element_y):
     # read data and define dataframes
-    if data_element_x != '':
-        data = query_firely_server(resource=resource, x=data_element_x, date_filter=False, date_from=None, date_to=None, y=data_element_y)
+    if data_element_y != '' or data_element_y != 'amountvalue':
+        data = query_firely_server(resource=resource, x=data_element_x, y=data_element_y, date_filter=False)
     else:
-        data = query_firely_server(resource=resource, x=data_element_x, date_filter=False, date_from=None, date_to=None, y=None)
+        data = query_firely_server(resource=resource, x=data_element_x, date_filter=False)
+    
+    if data_element_y == 'amountvalue':
+        df = data.groupby(data_element_x)[data_element_y].sum().reset_index()
+        df = data.groupby(data_element_x).size().rename('amountvalue').reset_index()
+        data = df
+
     x_var = data[data_element_x]
     y_var = data[data_element_y]
-    print(x_var)
 
     # Define the chart
     title = graph_type + " plotting " + data_element_x + (" and " + data_element_y if data_element_y != "" else "")
