@@ -13,3 +13,11 @@ body {
   box-shadow: 0 0 11px rgba(33, 33, 33, .2);
 }
 
+.btn:hover {
+  border-color: #6096B4;
+}
+
+.form-select:hover{
+  cursor: pointer;
+  background-color: #DAEAF1;
+}

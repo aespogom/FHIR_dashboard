@@ -8,12 +8,14 @@ var resource_type
 
 $("#add-graph").click(function () {
     $('[id^="graph-location"]').bind("click", function () {
+        $("#AI-help").show()
         $('[id^="graph-location"]').off("click");
         graph_location = $(this);
         $(graph_location).addClass("bg-secondary").removeClass("bg-light");
         $("#add-graph").next().nextAll().empty();
         showSelectGraph();
     })
+    
 })
 
 function showSelectGraph() {
@@ -129,9 +131,17 @@ function cb(data) {
 
 $("#ai-submit").click(function () {
     aigpt($("#ai-prompt").val());
+    
 })
 
-var preSet = "Give the answer in the following format: type of plot, type of FHIR resource, type of FHIR variables, seperated with;"
+$("#ai-prompt").keyup(function(event) {
+    if (event.keyCode === 13) {
+        aigpt($("#ai-prompt").val());
+    }
+});
+
+let preSet = "Give the answer in the following format: type of graph, type of FHIR resource, type of FHIR variables. Seperate with comma's."
+let responseText = "";
 
 function aigpt(prompt) {
     $("#ai-button-text").hide()
@@ -150,8 +160,27 @@ function aigpt(prompt) {
             $("#ai-button-text").show()
             $("#ai-button-spinner").hide()
             if (response.choices && response.choices.length) {
-                $("#ai-result").text(response.choices[0].text);
+                responseText = response.choices[0].text?.replaceAll('\n', "");
+                $("#ai-result").text(responseText);
             }
-        },
+        }, 
     })
 }
+
+$("#Usebutton").click(function() {
+    const MyArray = responseText.split(",")
+
+    let varplot = MyArray[0]
+    let varresource1 = MyArray[1]
+    let varresource = varresource1.replace(" ","")
+    let varvar1 = MyArray[2]
+    let varvar = varvar1.replace(" ","")
+    let var2var = ''
+    if (MyArray[3] !== undefined) {
+        let var2var1 = MyArray[3]
+        let var2var = var2var1.replace(" ","")
+    }  
+
+    var data = JSON.stringify({graph_type: varplot, resource: varresource, data_element_x: varvar, data_element_y: var2var});
+    cb(data);
+})
