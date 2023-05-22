@@ -27,7 +27,8 @@
             "reaction": "string",
             "category": "string",
             "criticality": "string",
-            "code": "string"
+            "code": "string",
+            "recordedDate": "date"
         }
     ],
     "CarePlan": [
@@ -43,7 +44,8 @@
             "addresses": "string",
             "supportingInfo": "string",
             "goal": "string",
-            "activity": "string"
+            "activity": "string",
+            "created": "date"
         }
     ],
     "ClaimResponse": [
@@ -58,7 +60,8 @@
             "disposition": "string",
             "total": "int",
             "payment": "int",
-            "error": "string"
+            "error": "string",
+            "created": "date"
         }
     ],
     "Condition": [
@@ -72,7 +75,8 @@
             "bodySite": "string",
             "stage": "string",
             "evidence": "string",
-            "note": "string"
+            "note": "string",
+            "recordedDate": "date"
         }
     ],
     "DetectedIssue": [
@@ -83,7 +87,8 @@
             "detail": "string",
             "severity": "string",
             "evidence": "string",
-            "mitigation": "string"
+            "mitigation": "string",
+            "identifiedDateTime": "date"
         }
     ],
     "Encounter": [
@@ -130,7 +135,8 @@
             "bodySite": "string",
             "component": "string",
             "code": "string",
-            "status": "string"
+            "status": "string",
+            "valueDateTime": "date"
         }
     ],
     "Procedure": [
@@ -143,7 +149,8 @@
             "code": "string",
             "bodySite": "string",
             "outcome": "string",
-            "note": "string"
+            "note": "string",
+            "performedDateTime": "date"
         }
     ],
     "Patient": [
@@ -161,7 +168,8 @@
             "reasonCode": "string",
             "prediction": "int",
             "mitigation": "string",
-            "note": "string"
+            "note": "string",
+            "occurrenceDateTime": "date"
         }
     ],
     "DATA_TYPE": {
@@ -197,9 +205,7 @@
         "EncounterClassHistory":"['class_fhir']['coding'][0]['display']",
         "EncounterDiagnosis":"['use']['coding'][0]['display']",
         "EncounterHospitalization":"['admitSource']['coding'][0]['display']",
-        "Duration":"['quantity']['value']",
-        "FHIRDate":"['isostring']"
-
+        "Duration":"['quantity']['value']"
     },
     "FILTER_PARAMS": {
         "AdverseEvent": [
