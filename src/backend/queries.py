@@ -93,7 +93,8 @@ def create_dataframe(dataframe: pd.DataFrame,
     keys_FHIR = json.load(fp)
   fp.close()
 
-  if x_data and x_data[0][1] != str and x_data[0][1] != int and x_data[0][1].resource_type in keys_FHIR['DATA_TYPE'].keys():
+  if x_data and x_data[0][1] != str and x_data[0][1] != int and x_data[0][1] != bool and x_data[0][1] != backend.utils.fhirdate.FHIRDate and \
+    x_data[0][1].resource_type in keys_FHIR['DATA_TYPE'].keys():
     if x_data[0][2]:
       x_access = x_access+"[0]"
     x_access = x_access+keys_FHIR['DATA_TYPE'][x_data[0][1].resource_type]
@@ -106,7 +107,8 @@ def create_dataframe(dataframe: pd.DataFrame,
       y_data = [ (name, data_type, is_list) for name, name_json, data_type, is_list, of_many, not_optional in properties if name == y_col]
       index+=1
     y_access = "['"+y_col+"']"
-    if y_data and y_data[0][1] != str and y_data[0][1] != int and y_data[0][1].resource_type in keys_FHIR['DATA_TYPE'].keys():
+    if y_data and y_data[0][1] != str and y_data[0][1] != int and y_data[0][1] != bool  and y_data[0][1] != backend.utils.fhirdate.FHIRDate \
+      and y_data[0][1].resource_type in keys_FHIR['DATA_TYPE'].keys():
           if y_data[0][2]:
               y_access = y_access+"[0]"
           y_access = y_access+keys_FHIR['DATA_TYPE'][y_data[0][1].resource_type]
@@ -190,12 +192,9 @@ def query_firely_server(resource: str,
 #   a = keys_FHIR.get(resource)[0].keys()
 #   dict_filter = {}
 #   list_filters = filter_FHIR.get(resource)
-#   for f in list_filters:
-#      if f=='patient':
-#         dict_filter[f]={'gender': 'other'}
-#         dict_filter[f]={'family': 'Donald'}
-#      else:
-#         dict_filter[f] = 'test'
+#   if list_filters:
+#     for f in list_filters:
+#       dict_filter[f] = 'test'
 #   dict_filter['Observation']={'code':'test'}
-#   # [print(query_firely_server(resource, x, date_attribute, y=x)) for x in a] 
-# print(query_firely_server('Observation', 'bodySite', date_attribute, y='interpretation'))
+#   [print(query_firely_server(resource, x, date_attribute, y=x)) for x in a] 
+# # print(query_firely_server('Observation', 'bodySite', date_attribute, y='interpretation'))
