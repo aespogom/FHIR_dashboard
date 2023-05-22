@@ -64,17 +64,16 @@ def build_query_with_filter(resource: str,
 
 def parse_result_plotly(x_value, x_datatype,
                  y_value, y_datatype):
-  if x_datatype == int or x_datatype == float:
-    x_result = int(x_datatype)
+  if x_datatype in [int, float, 'Ratio', 'Money', 'Quantity', 'Range', 'RatioRange', 'RiskAssessmentPrediction', 'Duration','ClaimResponseTotal', 'ClaimResponsePayment', 'MedicationIngredient']:
+    x_result = int(0 if x_value is None else x_value)
   elif x_datatype == backend.utils.fhirdate.FHIRDate:
     x_result = str(x_value.split('T')[0])
   else:
     x_result = str(x_value)
 
-  if y_datatype == int or y_datatype == float:
-    y_result = int(y_value)
+  if y_datatype in [int, float, 'Ratio', 'Money', 'Quantity', 'Range', 'RatioRange', 'RiskAssessmentPrediction', 'Duration','ClaimResponseTotal', 'ClaimResponsePayment', 'MedicationIngredient']:
+    y_result = int(0 if y_value is None else y_value)
   elif y_datatype == backend.utils.fhirdate.FHIRDate:
-    print('ana')
     y_result = str(y_value.split('T')[0])
   else:
     y_result = str(y_value)
@@ -227,4 +226,4 @@ def query_firely_server(resource: str,
 #       dict_filter[f] = 'test'
 #   dict_filter['Observation']={'code':'test'}
 #   [print(query_firely_server(resource, x, date_attribute, y=x)) for x in a] 
-# print(query_firely_server('AllergyIntolerance', 'recordedDate', False, y='amountvalue'))
+# print(query_firely_server('Medication', 'amount', False, y='amountvalue'))
