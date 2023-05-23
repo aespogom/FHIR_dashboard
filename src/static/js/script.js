@@ -1,4 +1,4 @@
-import { getResourceVariables, resetCurrentVariablesSelected } from '/../static/js/logic-modules/data-selection-glm.js';
+import { getResourceVariables, getResourceFilterVariables, resetCurrentVariablesSelected } from '/../static/js/logic-modules/data-selection-glm.js';
 
 var graph_location;
 var graph_type;
@@ -119,57 +119,78 @@ function showSelectDates() {
         <br>
         <label for="end-date">End Date:</label>
         <input type="date" id="end-date" name="end-date">
+        <br> <br> <p> Or you can filter your data by another resource <br>
     `);
 }
+
+var filter_variable_selection_added = false;
 
 function showAdditionalFilteringResource() {
-    $("#select-additional-filters").html(`
-        <br>
-        <p> Or you can filter your data by another resource <br> For this, first select a resource </p>
-        <select class="form-select" id="select-additional-filter-resource" name="select-additional-filter-resource" value="select-additional-filter-resource">
-            <option style="display: none">Resource</option>
-            <option value="AdverseEvent">Adverse event</option>
-            <option value="AllergyIntolerance">Allergies</option>
-            <option value="CarePlan">Careplans</option>
-            <option value="ClaimResponse">Claims</option>
-            <option value="Condition">Conditions</option>
-            <option value="DetectedIssue">Detected issues</option>
-            <option value="Encounter">Encounters</option>
-            <option value="InsurancePlan">Insurance plans</option>
-            <option value="Medication">Medications</option>
-            <option value="Observation">Observations</option>
-            <option value="Patient">Patients</option>
-            <option value="Procedure">Procedures</option>
-            <option value="RiskAssessment">Risk assessments</option>
-        </select>
-    `);
+    $("#select-additional-filters").append(`Select a resource
+    <select class="form-select select-additional-filter-resource" name="select-additional-filter-resource" value="select-additional-filter-resource">
+      <option style="display: none">Resource</option>
+      <option value="AdverseEvent">Adverse event</option>
+      <option value="AllergyIntolerance">Allergies</option>
+      <option value="CarePlan">Careplans</option>
+      <option value="ClaimResponse">Claims</option>
+      <option value="Condition">Conditions</option>
+      <option value="DetectedIssue">Detected issues</option>
+      <option value="Encounter">Encounters</option>
+      <option value="InsurancePlan">Insurance plans</option>
+      <option value="Medication">Medications</option>
+      <option value="Observation">Observations</option>
+      <option value="Patient">Patients</option>
+      <option value="Procedure">Procedures</option>
+      <option value="RiskAssessment">Risk assessments</option>
+    </select>
+  `);
 }
 
-$(document.body).off('change', '#select-additional-filter-resource').on('change', "#select-additional-filter-resource", function () {
-    filter_resouce_type = $("#select-additional-filter-resource").val();
-    showAdditionalFilteringVariable();
+$(document.body).off('change', '.select-additional-filter-resource:last').on('change', ".select-additional-filter-resource:last", function () {
+    if (filter_variable_selection_added) {
+        return
+    }
+    var filter_resource_type = $(".select-additional-filter-resource:last").val();
+    showAdditionalFilteringVariable(filter_resource_type);
+    filter_variable_selection_added = true;
+
 });
 
-async function getPossibleFilterVariables() {
-    var possible_filter_variables = await getResourceVariables(graph_type, filter_resouce_type);
-    return possible_filter_variables[2];
+async function getPossibleFilterVariables(filter_resource_type) {
+    var possible_filter_variables = await getResourceFilterVariables(filter_resource_type);
+    return possible_filter_variables;
 }
 
-function showAdditionalFilteringVariable() {
-    var possible_filter_variables = getPossibleFilterVariables();
+function showAdditionalFilteringVariable(filter_resource_type) {
+    var possible_filter_variables = getPossibleFilterVariables(filter_resource_type);
     var select_string = `
-        <br>
-        <p> And select a variable </p>
-        <select class="form-select" id="select-additional-filter-variable" name="select-additional-filter-variable" value="select-additional-filter-variable">
-            <option style="display: none">Variable</option>`;
+    <br>
+    <p> Select a variable </p>
+    <select class="form-select select-additional-filter-variable" name="select-additional-filter-variable" value="select-additional-filter-variable">
+      <option style="display: none">Variable</option>`;
     possible_filter_variables.then((value) => {
         value.forEach(variable => {
             select_string += `<option value="${variable}">${variable}</option>`;
         });
         select_string += "</select>";
-        $("#select-additional-filters").append(select_string);
+        select_string += '<br> The variable should be';
+        select_string += '<br> <input type="text" id="filter-value" name="filter-value" style="max-width: 100%;">';
+        select_string += '<br> <br> <button id="add-another-filter" class="btn btn-outline-dark text-white" style="background-color: #6096B4"> Add another filter </button>';
+
+        var additionalFilters = document.createElement("div");
+        additionalFilters.innerHTML = select_string;
+
+        $("#select-additional-filters").append(additionalFilters);
     });
 }
+
+$(document.body).off('click', '#add-another-filter').on('click', "#add-another-filter", function () {
+    filter_variable_selection_added = false;
+    $("#add-another-filter").remove();
+    showAdditionalFilteringResource();
+});
+
+
 
 $("#create-graph").off("click").on("click", function () {
     var graph_type = $("#select-graph-type").val();
@@ -206,17 +227,17 @@ function cb(data, graph_location) {
         success: function (data) {
             $("#Go-button-text").show()
             $("#Go-button-spinner").hide()
-            Plotly.newPlot(graph_location, data, {staticPlot: true});
+            Plotly.newPlot(graph_location, data, { staticPlot: true });
         },
     })
 }
 
 $("#ai-submit").click(function () {
     aigpt($("#ai-prompt").val());
-    
+
 })
 
-$("#ai-prompt").keyup(function(event) {
+$("#ai-prompt").keyup(function (event) {
     if (event.keyCode === 13) {
         aigpt($("#ai-prompt").val());
     }
@@ -227,12 +248,12 @@ let responseText = "";
 
 function aigpt(prompt) {
     $("#ai-button-text").hide()
-    $("#ai-button-spinner").show() 
+    $("#ai-button-spinner").show()
     prompt = preSet + prompt
     $.ajax({
         type: "POST",
         url: "/generate",
-        data: JSON.stringify({ 
+        data: JSON.stringify({
             "prompt": prompt
         }),
         contentType: "application/json",
@@ -245,25 +266,25 @@ function aigpt(prompt) {
                 responseText = response.choices[0].text?.replaceAll('\n', "");
                 $("#ai-result").text(responseText);
             }
-        }, 
+        },
     })
 }
 
-$("#Usebutton").click(function() {
+$("#Usebutton").click(function () {
     const MyArray = responseText.split(",")
 
     let varplot = MyArray[0]
     let varresource1 = MyArray[1]
-    let varresource = varresource1.replace(" ","")
+    let varresource = varresource1.replace(" ", "")
     let varvar1 = MyArray[2]
-    let varvar = varvar1.replace(" ","")
+    let varvar = varvar1.replace(" ", "")
     let var2var = ''
     if (MyArray[3] !== undefined) {
         let var2var1 = MyArray[3]
-        let var2var = var2var1.replace(" ","")
-    }  
+        let var2var = var2var1.replace(" ", "")
+    }
 
-    var data = JSON.stringify({graph_type: varplot, resource: varresource, data_element_x: varvar, data_element_y: var2var});
+    var data = JSON.stringify({ graph_type: varplot, resource: varresource, data_element_x: varvar, data_element_y: var2var });
     cb(data);
 })
 

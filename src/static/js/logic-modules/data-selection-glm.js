@@ -19,6 +19,12 @@ export async function getResourceVariables(graph_type, resource_type, selected_v
     }
 }
 
+export async function getResourceFilterVariables(filter_resouce_type) {
+    const response = await fetch("../../static/dicts/resource_variables.json");
+    const data = await response.json();
+    return data["FILTER_PARAMS"][filter_resouce_type];
+}
+
 function filterVariables(variables, graph_type, selected_variable) {
     var possible_variables = [];
     variables.forEach(variable => {

@@ -302,7 +302,7 @@
             "probability",
             "risk"
         ],
-        "patient": [
+        "Patient": [
             "active",
             "gender"
         ]
