@@ -106,6 +106,7 @@ function showSelectVariable(current_number_of_variables_selected, interface_text
 }
 
 $(document.body).off('change', '#select-variabele-div select:last').on('change', "#select-variabele-div select:last", function () {
+    $("#select-additional-filters").empty();
     showSelectDates();
     showAdditionalFilteringResource();
 });
