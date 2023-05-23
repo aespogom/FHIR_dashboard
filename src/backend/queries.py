@@ -122,6 +122,7 @@ def create_dataframe(dataframe: pd.DataFrame,
   elif x_data:
     x_datatype = x_data[0][1]
 
+  y_datatype = None
   if y_col:
     y_data = [ (name, data_type, is_list) for name, name_json, data_type, is_list, of_many, not_optional in properties if name == y_col]
     index = 1
@@ -130,7 +131,7 @@ def create_dataframe(dataframe: pd.DataFrame,
       y_data = [ (name, data_type, is_list) for name, name_json, data_type, is_list, of_many, not_optional in properties if name == y_col]
       index+=1
     y_access = "['"+y_col+"']"
-    y_datatype = None
+    
     if y_data and y_data[0][1] != str and y_data[0][1] != int and y_data[0][1] != bool  and y_data[0][1] != backend.utils.fhirdate.FHIRDate \
       and y_data[0][1].resource_type in keys_FHIR['DATA_TYPE'].keys():
           if y_data[0][2]:
@@ -147,8 +148,8 @@ def create_dataframe(dataframe: pd.DataFrame,
         y_value = eval("registry_as_json"+y_access) if y_col and registry_as_json.get(y_col) else None
         x_value, y_value = parse_result_plotly(x_value, x_datatype, y_value, y_datatype)
         dataframe.loc[len(dataframe)] = [str(x_value), y_value]
-      except:
-         print('There is an inconsistency in the database, skiping one registry')
+      except Exception as e:
+         print('There is an inconsistency in the database, skiping one registry ' +str(e))
 
   return dataframe
 
@@ -165,7 +166,7 @@ def query_firely_server(resource: str,
     Calls the function responsible of building the endpoint
     Calls the function responsible of modelling the request response
     
-    Args:
+    Args:   
       resource: A string representing the name of the resource
       x: A string representing the name of the first resource attribute
       date_col: A boolean indicating if there is a filter by datetime
