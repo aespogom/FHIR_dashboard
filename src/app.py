@@ -18,10 +18,10 @@ def cb():
     resource = data["resource"]
     data_element_x = data["data_element_x"]
     data_element_y = data["data_element_y"]
-    start_date = data["start_date"]
-    end_date = data["end_date"]
-    additional_filter_resource = data["additional_filter_resource"]
-    additional_filter_variable = data["additional_filter_variable"]
+    start_date = data["start_date"] if "start_date" in data else None 
+    end_date = data["end_date"] if "end_date" in data else None
+    additional_filter_resource = data["additional_filter_resource"] if "additional_filter_resource" in data else None
+    additional_filter_variable = data["additional_filter_variable"] if "additional_filter_variable" in data else None
     return gm(resource, graph_type, data_element_x, data_element_y)
 
 @app.route('/generate', methods=['POST'])

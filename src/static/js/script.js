@@ -204,8 +204,8 @@ function cb(data, graph_location) {
         contentType: "application/json",
         dataType: 'json',
         success: function (data) {
-            $("#Go-button-text").show()
-            $("#Go-button-spinner").hide()
+            $("#Go-button-text").show();
+            $("#Go-button-spinner").hide();
             Plotly.newPlot(graph_location, data, {staticPlot: true});
         },
     })
@@ -264,12 +264,12 @@ function aigpt(prompt) {
                 responseText = response.choices[0].text?.replaceAll('\n', "");
                 $("#ai-result").text(responseText);
             }
-        }, 
+        },
     })
 }
 
 $("#Usebutton").click(function() {
-    const MyArray = responseText.split(",")
+    const MyArray = $("#ai-result").val().split(",")
 
     let varplot = MyArray[0]
     let varresource1 = MyArray[1]
@@ -279,11 +279,19 @@ $("#Usebutton").click(function() {
     let var2var = ''
     if (MyArray[3] !== undefined) {
         let var2var1 = MyArray[3]
-        let var2var = var2var1.replace(" ","")
+        var2var = var2var1.replace(" ","")
     }  
+    let identified_filters = {}
+    if (MyArray[4] !== '{}') {
+        identified_filters = MyArray[3]
+    }     
 
-    var data = JSON.stringify({graph_type: varplot, resource: varresource, data_element_x: varvar, data_element_y: var2var});
-    cb(data);
+    var data = JSON.stringify({graph_type: varplot,
+                                resource: varresource,
+                                data_element_x: varvar,
+                                data_element_y: var2var,
+                                filters: identified_filters});
+    cb(data, graph_location.attr("id"));
 })
 
 $(window).on('resize', function () {
