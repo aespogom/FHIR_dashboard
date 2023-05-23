@@ -69,7 +69,7 @@ def gm(resource, graph_type, data_element_x, data_element_y):
         df = data.groupby(data_element_x).size().rename('Value').reset_index()
         fig = go.Figure(data=[go.Pie(labels=df[data_element_x], values=df['Value'])])
         fig.update_layout(title=title, xaxis_title=data_element_x, yaxis_title=data_element_y)
-    elif graph_type == 'scatterplot':
+    elif graph_type == 'Scatter plot':
         fig = go.Figure(data=[go.Scatter(x=x_var, y=y_var, mode='markers')])
         fig.update_layout(title=title, xaxis_title=data_element_x, yaxis_title=data_element_y)
     

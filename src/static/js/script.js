@@ -52,9 +52,11 @@ function showSelectResource() {
             <option value="ClaimResponse">Claims</option>
             <option value="Condition">Conditions</option>
             <option value="DetectedIssue">Detected issues</option>
+            <option value="Encounter">Encounters</option>
             <option value="InsurancePlan">Insurance plans</option>
             <option value="Medication">Medications</option>
             <option value="Observation">Observations</option>
+            <option value="Patient">Patients</option>
             <option value="Procedure">Procedures</option>
             <option value="RiskAssessment">Risk assessments</option>
         </select>
@@ -132,9 +134,11 @@ function showAdditionalFilteringResource() {
             <option value="ClaimResponse">Claims</option>
             <option value="Condition">Conditions</option>
             <option value="DetectedIssue">Detected issues</option>
+            <option value="Encounter">Encounters</option>
             <option value="InsurancePlan">Insurance plans</option>
             <option value="Medication">Medications</option>
             <option value="Observation">Observations</option>
+            <option value="Patient">Patients</option>
             <option value="Procedure">Procedures</option>
             <option value="RiskAssessment">Risk assessments</option>
         </select>
@@ -170,8 +174,8 @@ function showAdditionalFilteringVariable() {
 $("#create-graph").off("click").on("click", function () {
     var graph_type = $("#select-graph-type").val();
     var resource = $("#select-resource").val();
-    var data_element_x = $("#select-variable-0").val().toLowerCase();
-    var data_element_y = $("#select-variable-1").val()?.toLowerCase() || '';
+    var data_element_x = $("#select-variable-0").val();
+    var data_element_y = $("#select-variable-1").val() || '';
     var start_date = $('#start-date').val() ? new Date($('#start-date').val()) : null;
     var end_date = $('#end-date').val() ? new Date($('#end-date').val()) : null;
     var additional_filter_resource = $("#select-additional-filter-resource").val() || null;

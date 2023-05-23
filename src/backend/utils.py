@@ -48,8 +48,10 @@ from  fhirclient.models import account,\
                                 eventdefinition,\
                                 examplescenario,\
                                 explanationofbenefit,\
+                                encounter,\
                                 familymemberhistory,\
                                 flag,\
+                                fhirdate,\
                                 goal,\
                                 graphdefinition,\
                                 group,\

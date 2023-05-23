@@ -61,6 +61,25 @@ def build_query_with_filter(resource: str,
     query = query[:-1]  
   print(query)
   return query
+
+def parse_result_plotly(x_value, x_datatype,
+                 y_value, y_datatype):
+  if x_datatype in [int, float, 'Ratio', 'Money', 'Quantity', 'Range', 'RatioRange', 'RiskAssessmentPrediction', 'Duration','ClaimResponseTotal', 'ClaimResponsePayment', 'MedicationIngredient']:
+    x_result = int(0 if x_value is None else x_value)
+  elif x_datatype == backend.utils.fhirdate.FHIRDate:
+    x_result = str(x_value.split('T')[0])
+  else:
+    x_result = str(x_value)
+
+  if y_datatype in [int, float, 'Ratio', 'Money', 'Quantity', 'Range', 'RatioRange', 'RiskAssessmentPrediction', 'Duration','ClaimResponseTotal', 'ClaimResponsePayment', 'MedicationIngredient']:
+    y_result = int(0 if y_value is None else y_value)
+  elif y_datatype == backend.utils.fhirdate.FHIRDate:
+    y_result = str(y_value.split('T')[0])
+  else:
+    y_result = str(y_value)
+  
+  return x_result, y_result
+   
      
 
 def create_dataframe(dataframe: pd.DataFrame,
@@ -88,16 +107,22 @@ def create_dataframe(dataframe: pd.DataFrame,
     x_data = [ (name, data_type, is_list) for name, name_json, data_type, is_list, of_many, not_optional in properties if name == x_col]
     index+=1
   x_access = "['"+x_col+"']"
+  x_datatype = None
   
   with open('static/dicts/resource_variables.json') as fp:
     keys_FHIR = json.load(fp)
   fp.close()
 
-  if x_data and x_data[0][1] != str and x_data[0][1] != int and x_data[0][1].resource_type in keys_FHIR['DATA_TYPE'].keys():
+  if x_data and x_data[0][1] != str and x_data[0][1] != int and x_data[0][1] != bool and x_data[0][1] != backend.utils.fhirdate.FHIRDate and \
+    x_data[0][1].resource_type in keys_FHIR['DATA_TYPE'].keys():
     if x_data[0][2]:
       x_access = x_access+"[0]"
     x_access = x_access+keys_FHIR['DATA_TYPE'][x_data[0][1].resource_type]
+    x_datatype = x_data[0][1].resource_type
+  elif x_data:
+    x_datatype = x_data[0][1]
 
+  y_datatype = None
   if y_col:
     y_data = [ (name, data_type, is_list) for name, name_json, data_type, is_list, of_many, not_optional in properties if name == y_col]
     index = 1
@@ -106,19 +131,25 @@ def create_dataframe(dataframe: pd.DataFrame,
       y_data = [ (name, data_type, is_list) for name, name_json, data_type, is_list, of_many, not_optional in properties if name == y_col]
       index+=1
     y_access = "['"+y_col+"']"
-    if y_data and y_data[0][1] != str and y_data[0][1] != int and y_data[0][1].resource_type in keys_FHIR['DATA_TYPE'].keys():
+    
+    if y_data and y_data[0][1] != str and y_data[0][1] != int and y_data[0][1] != bool  and y_data[0][1] != backend.utils.fhirdate.FHIRDate \
+      and y_data[0][1].resource_type in keys_FHIR['DATA_TYPE'].keys():
           if y_data[0][2]:
               y_access = y_access+"[0]"
           y_access = y_access+keys_FHIR['DATA_TYPE'][y_data[0][1].resource_type]
+          y_datatype = y_data[0][1].resource_type
+    elif y_data:
+      y_datatype = y_data[0][1]
   
   for registry in list_fhir:
       registry_as_json = registry.as_json()
       try:
         x_value = eval("registry_as_json"+x_access) if registry_as_json.get(x_col) else None
         y_value = eval("registry_as_json"+y_access) if y_col and registry_as_json.get(y_col) else None
+        x_value, y_value = parse_result_plotly(x_value, x_datatype, y_value, y_datatype)
         dataframe.loc[len(dataframe)] = [str(x_value), y_value]
-      except:
-         print('There is an inconsistency in the database, skiping one registry')
+      except Exception as e:
+         print('There is an inconsistency in the database, skiping one registry ' +str(e))
 
   return dataframe
 
@@ -135,7 +166,7 @@ def query_firely_server(resource: str,
     Calls the function responsible of building the endpoint
     Calls the function responsible of modelling the request response
     
-    Args:
+    Args:   
       resource: A string representing the name of the resource
       x: A string representing the name of the first resource attribute
       date_col: A boolean indicating if there is a filter by datetime
@@ -166,6 +197,7 @@ def query_firely_server(resource: str,
                   registry = eval("backend.utils."+resource.lower()+"."+resource+"(entry['resource'])")
                   list_registries.append(registry)
             dataframe = create_dataframe(dataframe,x,y,list_registries)
+            print(dataframe.head())
         return dataframe
 
     result.raise_for_status()
@@ -190,12 +222,9 @@ def query_firely_server(resource: str,
 #   a = keys_FHIR.get(resource)[0].keys()
 #   dict_filter = {}
 #   list_filters = filter_FHIR.get(resource)
-#   for f in list_filters:
-#      if f=='patient':
-#         dict_filter[f]={'gender': 'other'}
-#         dict_filter[f]={'family': 'Donald'}
-#      else:
-#         dict_filter[f] = 'test'
+#   if list_filters:
+#     for f in list_filters:
+#       dict_filter[f] = 'test'
 #   dict_filter['Observation']={'code':'test'}
-#   # [print(query_firely_server(resource, x, date_attribute, y=x)) for x in a] 
-# print(query_firely_server('Observation', 'bodySite', date_attribute, y='interpretation'))
+#   [print(query_firely_server(resource, x, date_attribute, y=x)) for x in a] 
+# print(query_firely_server('Medication', 'amount', False, y='amountvalue'))
