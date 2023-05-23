@@ -222,18 +222,37 @@ $("#ai-prompt").keyup(function(event) {
     }
 });
 
-let preSet = "Give the answer in the following format: type of graph, type of FHIR resource, type of FHIR variables. Seperate with comma's."
-let responseText = "";
 
 function aigpt(prompt) {
     $("#ai-button-text").hide()
     $("#ai-button-spinner").show() 
-    prompt = preSet + prompt
+    let input_prompt = `\
+        Upon receiving a free text string, the model will:
+        1. Identify a type of graph mentioned in the provided list: "Line graph, Bar graph, Pie chart, Scatter plot." The model will extract the corresponding type of graph as a string.
+        2. Identify a type of FHIR resource mentioned in the provided list: """AdverseEvent, AllergyIntolerance, CarePlan, ClaimResponse, Condition, DetectedIssue, InsurancePlan, Medication, Observation, Procedure, RiskAssessment, Encounter, Patient""". The model will extract the corresponding FHIR resource as a string.
+        3. Extract one or two attributes related to the FHIR resource mentioned in step 2. The model will verify that the mentioned attribute(s) are included in the official FHIR R4 resource.
+        4. Identify a set of filters. Each filter consists of one FHIR resource, one attribute, and one value to filter by. The filter FHIR resource should be included in the provided list: """AdverseEvent, AllergyIntolerance, CarePlan, ClaimResponse, Condition, DetectedIssue, InsurancePlan, Medication, Observation, Procedure, RiskAssessment, Encounter, Patient""". The filter FHIR resource may be different from the identified resource in step 1. The filter attribute is included in the official FHIR R4. The model will extract the corresponding set of filters as a key-value dictionary. The dictionary key will be a string corresponding to the filter resource. For each filter resource, a new key should be set. The value of the dictionary will be an embedded dictionary. The embedded dictionary has a key corresponding to the filter attribute and a value corresponding to the filter value. Exclude from the response all of the following characters: <, >, ==, != .
+        The resulting keywords will be returned as a comma-separated string.
+        If it is not possible to extract any keyword, an empty string will be returned.
+        If no type of graph is mentioned and two attributes are identified, return Line graph.
+        If no type of graph is mentioned and one attribute is identified, return Pie chart.
+        If no FHIR resource is identified, return Observation.
+        If no attributes are identified, return date and amountvalue.
+        If no filters are identified, return {}.
+        Free text string 1: """I want to plot patient age versus gender as bars."""
+        Keywords 1: Bar graph, Patient, age, gender, {}
+        ##
+        Free text string 2: """Display a plot where the allergy codes are scattered against the severity from January 2023.
+        Keywords 2: Scatter plot, AllergyIntolerance, code, severity, {'AllergyIntolerance': {'date': '2023-01-01'}}
+        ##
+        Free text string 3: """${prompt}"""
+        Keywords 3:
+    `
     $.ajax({
         type: "POST",
         url: "/generate",
         data: JSON.stringify({ 
-            "prompt": prompt
+            "prompt": input_prompt
         }),
         contentType: "application/json",
         dataType: 'json',
