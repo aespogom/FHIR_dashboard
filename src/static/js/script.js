@@ -5,6 +5,20 @@ var graph_type;
 var resource_type;
 var filter_resouce_type;
 
+$(document).ready(function () {
+    $("#preset-2").hide(); 
+    $("#preset-3").hide(); 
+
+    $("button[id^='preset-']").click(function () {
+        var id = $(this).attr("id");
+        var number = id.split("-")[1];
+
+        $("div[id^='preset-']:visible").hide();
+
+        $("#preset-" + number).show();
+    });
+});
+
 $("#add-graph").click(function () {
     $('[id^="graph-location"]').bind("click", function () {
         $("#AI-help").show()
