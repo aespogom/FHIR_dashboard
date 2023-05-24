@@ -4,7 +4,6 @@ var graph_location;
 var graph_type;
 var resource_type;
 var filter_resouce_type;
-
 $("#add-graph").click(function () {
     $('[id^="graph-location"]').bind("click", function () {
         $("#AI-help").show()
@@ -205,8 +204,15 @@ function cb(data, graph_location) {
         dataType: 'json',
         success: function (data) {
             $("#Go-button-text").show();
-            $("#Go-button-spinner").hide();
+            $("#"+graph_location).removeClass("bg-secondary").addClass("bg-light");
+            var close_button = `
+            <input id="close-button" type="button"
+            class="btn-close bg-light" aria-label="Close" 
+            onclick="$('#`+graph_location+`').empty()" 
+            style="margin-left: auto;display: block;"/>`
+            $('#'+graph_location).prepend(close_button);
             Plotly.newPlot(graph_location, data, {staticPlot: true});
+            $("#Go-button-spinner").hide();
         },
     })
 }
