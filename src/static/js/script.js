@@ -265,6 +265,9 @@ function aigpt(prompt) {
                 $("#ai-result").text(responseText);
             }
         },
+        error: function (request, status, error) {
+            alert(request.responseText);
+        }  
     })
 }
 
