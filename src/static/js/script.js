@@ -205,13 +205,15 @@ function cb(data, graph_location) {
         success: function (data) {
             $("#Go-button-text").show();
             $("#"+graph_location).removeClass("bg-secondary").addClass("bg-light");
-            var close_button = `
-            <input id="close-button" type="button"
-            class="btn-close bg-light" aria-label="Close" 
-            onclick="$('#`+graph_location+`').empty()" 
-            style="margin-left: auto;display: block;"/>`
-            $('#'+graph_location).prepend(close_button);
             Plotly.newPlot(graph_location, data, {staticPlot: true});
+            if ($('#'+graph_location).find('#close-button').length === 0){
+                var close_button = `
+                <input id="close-button" type="button"
+                class="btn-close bg-light" aria-label="Close" 
+                onclick="$('#`+graph_location+`').empty()" 
+                style="margin-left: auto;display: block;"/>`
+                $('#'+graph_location).prepend(close_button);
+            }
             $("#Go-button-spinner").hide();
         },
     })
