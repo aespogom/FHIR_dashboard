@@ -175,7 +175,7 @@ function showAdditionalFilteringVariable(filter_resource_type) {
         });
         select_string += "</select>";
         select_string += '<br> The variable should be';
-        select_string += '<br> <input type="text" id="filter-value" name="filter-value" style="max-width: 100%;">';
+        select_string += '<br> <input type="text" class="filter-value" name="filter-value" style="max-width: 100%;">';
         select_string += '<br> <br> <button id="add-another-filter" class="btn btn-outline-dark text-white" style="background-color: #6096B4"> Add another filter </button>';
 
         var additionalFilters = document.createElement("div");
@@ -202,6 +202,18 @@ $("#create-graph").off("click").on("click", function () {
     var end_date = $('#end-date').val() ? new Date($('#end-date').val()) : null;
     var additional_filter_resource = $("#select-additional-filter-resource").val() || null;
     var additional_filter_variable = $("#select-additional-filter-variable").val() || null;
+
+    var filter_resources = $(".select-additional-filter-resource").map((_, el) => el.value).get();
+    var filter_variables = $(".select-additional-filter-variable").map((_, el) => el.value).get();
+    var filter_values = $(".filter-value").map((_, el) => el.value).get();
+
+    if (filter_resources.length !== 0 && filter_variables.length !== 0 && filter_values.length !== 0) {
+        // here the additional filters dict should be created 
+    }
+
+
+
+    // this has to be changed to include the newly created dict, we should catch an empty variable (in case of no additional filters) somewhere, probably in the backend
     var data = JSON.stringify({ graph_type: graph_type, resource: resource, data_element_x: data_element_x, data_element_y: data_element_y, start_date: start_date, end_date: end_date, additional_filter_resource: additional_filter_resource, additional_filter_variable: additional_filter_variable, graph_location: graph_location.attr("id") });
     updateGraphStorage(data);
     cb(data, graph_location.attr("id"));
