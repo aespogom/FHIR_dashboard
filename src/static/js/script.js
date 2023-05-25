@@ -4,14 +4,14 @@ var graph_location;
 var graph_type;
 var resource_type;
 var filter_resouce_type;
-
 $("#add-graph").click(function () {
+ 
     $('[id^="graph-location"]').bind("click", function () {
-        $("#AI-help").show()
         $('[id^="graph-location"]').off("click");
         graph_location = $(this);
+        $("#AI-help").show();
         $(graph_location).addClass("bg-secondary").removeClass("bg-light");
-        $("#add-graph").next().nextAll().empty();
+        $("#add-graph").next().nextAll().slice(-3).empty();
         showSelectGraph();
     });
 });
@@ -19,7 +19,7 @@ $("#add-graph").click(function () {
 function showSelectGraph() {
     $("#select-graph-div").html(`
         <br>
-        <p> Select the type of graph you want to create </p>
+        <p> Select the type of graph </p>
         <select class="form-select" id="select-graph-type" name="select-graph-type" value="select-graph-type">
             <option style="display: none">Graph type</option>
             <option value="Bar graph">Bar graph</option>
@@ -43,7 +43,7 @@ $(document.body).off('change', '#select-graph-type').on('change', "#select-graph
 function showSelectResource() {
     $("#select-resource-div").html(`
         <br>
-        <p> Now select the a resource for which you want to create a graph </p>
+        <p> Select a FHIR resource</p>
         <select class="form-select" id="select-resource" name="select-resource" value="select-resource">
             <option style="display: none">Resource</option>
             <option value="AdverseEvent">Adverse event</option>
@@ -109,12 +109,13 @@ $(document.body).off('change', '#select-variabele-div select:last').on('change',
     $("#select-additional-filters").empty();
     showSelectDates();
     showAdditionalFilteringResource();
+    $("#filter-button").show();
 });
 
 function showSelectDates() {
     $("#select-dates-div").html(`
         <br>
-        <p> Optionally you can select a start and end date for your data selection to plot a part of the data </p>
+        <p> Optionally filter by date </p>
         <label for="start-date">Start Date:</label>
         <input type="date" id="start-date" name="start-date">
         <br>
@@ -238,9 +239,18 @@ function cb(data, graph_location) {
         contentType: "application/json",
         dataType: 'json',
         success: function (data) {
-            $("#Go-button-text").show()
-            $("#Go-button-spinner").hide()
-            Plotly.newPlot(graph_location, data, { staticPlot: true });
+            $("#Go-button-text").show();
+            $("#"+graph_location).removeClass("bg-secondary").addClass("bg-light");
+            Plotly.newPlot(graph_location, data, {staticPlot: true});
+            if ($('#'+graph_location).find('#close-button').length === 0){
+                var close_button = `
+                <input id="close-button" type="button"
+                class="btn-close bg-light" aria-label="Close" 
+                onclick="$('#`+graph_location+`').empty()" 
+                style="margin-left: auto;display: block;"/>`
+                $('#'+graph_location).prepend(close_button);
+            }
+            $("#Go-button-spinner").hide();
         },
     })
 }
@@ -256,18 +266,37 @@ $("#ai-prompt").keyup(function (event) {
     }
 });
 
-let preSet = "Give the answer in the following format: type of graph, type of FHIR resource, type of FHIR variables. Seperate with comma's."
-let responseText = "";
 
 function aigpt(prompt) {
     $("#ai-button-text").hide()
-    $("#ai-button-spinner").show()
-    prompt = preSet + prompt
+    $("#ai-button-spinner").show() 
+    let input_prompt = `\
+        Upon receiving a free text string, the model will:
+        1. Identify a type of graph mentioned in the provided list: "Line graph, Bar graph, Pie chart, Scatter plot." The model will extract the corresponding type of graph as a string.
+        2. Identify a type of FHIR resource mentioned in the provided list: """AdverseEvent, AllergyIntolerance, CarePlan, ClaimResponse, Condition, DetectedIssue, InsurancePlan, Medication, Observation, Procedure, RiskAssessment, Encounter, Patient""". The model will extract the corresponding FHIR resource as a string.
+        3. Extract one or two attributes related to the FHIR resource mentioned in step 2. The model will verify that the mentioned attribute(s) are included in the official FHIR R4 resource.
+        4. Identify a set of filters. Each filter consists of one FHIR resource, one attribute, and one value to filter by. The filter FHIR resource should be included in the provided list: """AdverseEvent, AllergyIntolerance, CarePlan, ClaimResponse, Condition, DetectedIssue, InsurancePlan, Medication, Observation, Procedure, RiskAssessment, Encounter, Patient""". The filter FHIR resource may be different from the identified resource in step 1. The filter attribute is included in the official FHIR R4. The model will extract the corresponding set of filters as a key-value dictionary. The dictionary key will be a string corresponding to the filter resource. For each filter resource, a new key should be set. The value of the dictionary will be an embedded dictionary. The embedded dictionary has a key corresponding to the filter attribute and a value corresponding to the filter value. Exclude from the response all of the following characters: <, >, ==, != .
+        The resulting keywords will be returned as a comma-separated string.
+        If it is not possible to extract any keyword, an empty string will be returned.
+        If no type of graph is mentioned and two attributes are identified, return Line graph.
+        If no type of graph is mentioned and one attribute is identified, return Pie chart.
+        If no FHIR resource is identified, return Observation.
+        If no attributes are identified, return date and amountvalue.
+        If no filters are identified, return {}.
+        Free text string 1: """I want to plot patient age versus gender as bars."""
+        Keywords 1: Bar graph, Patient, age, gender, {}
+        ##
+        Free text string 2: """Display a plot where the allergy codes are scattered against the severity from January 2023.
+        Keywords 2: Scatter plot, AllergyIntolerance, code, severity, {'AllergyIntolerance': {'date': '2023-01-01'}}
+        ##
+        Free text string 3: """${prompt}"""
+        Keywords 3:
+    `
     $.ajax({
         type: "POST",
         url: "/generate",
-        data: JSON.stringify({
-            "prompt": prompt
+        data: JSON.stringify({ 
+            "prompt": input_prompt
         }),
         contentType: "application/json",
         dataType: 'json',
@@ -280,11 +309,14 @@ function aigpt(prompt) {
                 $("#ai-result").text(responseText);
             }
         },
+        error: function (request, status, error) {
+            alert(request.responseText);
+        }  
     })
 }
 
-$("#Usebutton").click(function () {
-    const MyArray = responseText.split(",")
+$("#Usebutton").click(function() {
+    const MyArray = $("#ai-result").val().split(",")
 
     let varplot = MyArray[0]
     let varresource1 = MyArray[1]
@@ -294,11 +326,19 @@ $("#Usebutton").click(function () {
     let var2var = ''
     if (MyArray[3] !== undefined) {
         let var2var1 = MyArray[3]
-        let var2var = var2var1.replace(" ", "")
-    }
+        var2var = var2var1.replace(" ","")
+    }  
+    let identified_filters = {}
+    if (MyArray[4] !== '{}') {
+        identified_filters = MyArray[3]
+    }     
 
-    var data = JSON.stringify({ graph_type: varplot, resource: varresource, data_element_x: varvar, data_element_y: var2var });
-    cb(data);
+    var data = JSON.stringify({graph_type: varplot,
+                                resource: varresource,
+                                data_element_x: varvar,
+                                data_element_y: var2var,
+                                filters: identified_filters});
+    cb(data, graph_location.attr("id"));
 })
 
 $(window).on('resize', function () {
