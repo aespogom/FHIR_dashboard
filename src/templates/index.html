@@ -39,7 +39,8 @@
         <button id="AI-help" type="button" class="btn btn-outline-dark rounded-circle text-white" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style = "background-color: #6096B4; display: none;">
           <i class="fa fa-question-circle-o" aria-hidden="true"></i>
         </button>
-        
+        <button id="filter-button" type="button" class="btn btn-info btn-md" data-bs-toggle="modal" data-bs-target="#advanceFilterModal" style = "background-color: #6096B4; display: none; color: white;">Advance Filtering</button>
+
         <div id="select-graph-div">
 
         </div>
@@ -49,12 +50,12 @@
         <div id="select-variabele-div">
 
         </div>
-        <div id="select-dates-div">
+        <!-- <div id="select-dates-div">
         
         </div>
         <div id="select-additional-filters">
         
-        </div>
+        </div> -->
       </div>
       
     </div>
@@ -118,6 +119,29 @@
         <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal" style="background-color: #A0C3D2">Close</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Modal Advance Search -->
+<div class="modal fade" id="advanceFilterModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="advanceFilterModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <!-- Modal content start-->
+      <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="advanceFilterModalLabel">Advance Filter</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div id="select-dates-div">
+            </div>
+            <div id="select-additional-filters">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button id="addFilters" type="button" class="btn btn-outline-dark" data-bs-dismiss="modal" style="background-color: #A0C3D2">Apply</button>
+            <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal" style="background-color: #A0C3D2">Close</button>
+          </div>
+      </div>
   </div>
 </div>
 

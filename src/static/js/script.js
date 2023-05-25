@@ -6,7 +6,7 @@ var resource_type;
 var filter_resouce_type;
 $("#add-graph").click(function () {
     $('[id^="graph-location"]').bind("click", function () {
-        $("#AI-help").show()
+        $("#AI-help").show();
         $('[id^="graph-location"]').off("click");
         graph_location = $(this);
         $(graph_location).addClass("bg-secondary").removeClass("bg-light");
@@ -107,6 +107,7 @@ function showSelectVariable(current_number_of_variables_selected, interface_text
 $(document.body).off('change', '#select-variabele-div select:last').on('change', "#select-variabele-div select:last", function () {
     showSelectDates();
     showAdditionalFilteringResource();
+    $("#filter-button").show();
 });
 
 function showSelectDates() {
