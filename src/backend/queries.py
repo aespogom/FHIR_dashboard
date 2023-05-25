@@ -14,7 +14,6 @@ import pandas as pd
 load_dotenv()
 
 def build_query_with_filter(resource: str,
-                            date_filter: bool,
                             date_from: Union[datetime, None],
                             date_to: Union[datetime, None],
                             filters: Union[dict, None]):
@@ -22,7 +21,6 @@ def build_query_with_filter(resource: str,
   
   Args:
     resource: A string representing the name of the resource
-    date_col: A boolean indicating if there is a filter by datetime
     date_from: An optional datetime representing the minimum date
     date_to: An optional datetime representing the maximum date
     filters: An optional dictionary representing the additional queries
@@ -37,15 +35,15 @@ def build_query_with_filter(resource: str,
   query = query + resource
 
   #Construct additional queries
-  if date_from and date_filter:
+  if date_from:
     query = query + '?date=ge'+date_from.strftime("%Y-%m-%d")
-    if date_to and date_filter:
+    if date_to:
       query = query + '&date=le'+date_to.strftime("%Y-%m-%d")
-  elif date_to and date_filter:
+  elif date_to:
     query = query + '?date=le'+date_to.strftime("%Y-%m-%d")
   
   if filters:
-    if not date_filter:
+    if not date_from and not date_to:
       query = query+'?'
     else:
       query = query+'&'
@@ -156,10 +154,9 @@ def create_dataframe(dataframe: pd.DataFrame,
 
 def query_firely_server(resource: str,
                         x: str,
-                        date_filter: bool,
                         date_from: Union[datetime, None] = None,
                         date_to: Union[datetime, None] = None,
-                        y: Union[str,None] = None,
+                        y: Union[str, None] = None,
                         filters: dict = None):
     '''Handles the query of a given resource to Firely server
     and the retrieval of the response in an interpretable form
@@ -169,7 +166,6 @@ def query_firely_server(resource: str,
     Args:   
       resource: A string representing the name of the resource
       x: A string representing the name of the first resource attribute
-      date_col: A boolean indicating if there is a filter by datetime
       date_from: An optional datetime representing the minimum date
       date_to: An optional datetime representing the maximum date
       y: An optional string representing the name of the second resource attribute
@@ -181,7 +177,7 @@ def query_firely_server(resource: str,
       A dataframe with the resource information filtered
     '''
 
-    query = build_query_with_filter(resource=resource, date_filter=date_filter, date_from=date_from, date_to=date_to, filters=filters)
+    query = build_query_with_filter(resource=resource, date_from=date_from, date_to=date_to, filters=filters)
     
     result = requests.get(query)
     

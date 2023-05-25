@@ -201,21 +201,22 @@ $("#create-graph").off("click").on("click", function () {
     var data_element_y = $("#select-variable-1").val() || '';
     var start_date = $('#start-date').val() ? new Date($('#start-date').val()) : null;
     var end_date = $('#end-date').val() ? new Date($('#end-date').val()) : null;
-    var additional_filter_resource = $("#select-additional-filter-resource").val() || null;
-    var additional_filter_variable = $("#select-additional-filter-variable").val() || null;
 
     var filter_resources = $(".select-additional-filter-resource").map((_, el) => el.value).get();
     var filter_variables = $(".select-additional-filter-variable").map((_, el) => el.value).get();
     var filter_values = $(".filter-value").map((_, el) => el.value).get();
-
+    
+    let filter_dict = new Map();
     if (filter_resources.length !== 0 && filter_variables.length !== 0 && filter_values.length !== 0) {
-        // here the additional filters dict should be created 
+        filter_resources.forEach(function (key_name, i) {
+            
+            var dict_aux = new Map();
+            filter_dict.set(key_name, dict_aux.set(filter_variables[i], filter_values[i]))
+        });
     }
+    filter_dict = mapToJSON(filter_dict);
 
-
-
-    // this has to be changed to include the newly created dict, we should catch an empty variable (in case of no additional filters) somewhere, probably in the backend
-    var data = JSON.stringify({ graph_type: graph_type, resource: resource, data_element_x: data_element_x, data_element_y: data_element_y, start_date: start_date, end_date: end_date, additional_filter_resource: additional_filter_resource, additional_filter_variable: additional_filter_variable, graph_location: graph_location.attr("id") });
+    var data = JSON.stringify({ graph_type: graph_type, resource: resource, data_element_x: data_element_x, data_element_y: data_element_y, start_date: start_date, end_date: end_date, filters: filter_dict, graph_location: graph_location.attr("id") });
     updateGraphStorage(data);
     cb(data, graph_location.attr("id"));
 
@@ -401,4 +402,18 @@ function displayImportedGraphs() {
     } else {
         console.log('No graphs found in localStorage.');
     }
+}
+
+function mapToJSON(map) {
+    const jsonObj = {};
+
+    map.forEach((value, key) => {
+        if (typeof value === 'object' && value instanceof Map) {
+        jsonObj[key] = mapToJSON(value); // Recursively convert nested map
+        } else {
+        jsonObj[key] = value; // Convert regular value
+        }
+    });
+
+    return jsonObj;
 }

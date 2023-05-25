@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from flask import Flask, config, render_template, request
 import pandas as pd
 import json
@@ -18,11 +19,17 @@ def cb():
     resource = data["resource"]
     data_element_x = data["data_element_x"]
     data_element_y = data["data_element_y"]
-    start_date = data["start_date"] if "start_date" in data else None 
-    end_date = data["end_date"] if "end_date" in data else None
-    additional_filter_resource = data["additional_filter_resource"] if "additional_filter_resource" in data else None
-    additional_filter_variable = data["additional_filter_variable"] if "additional_filter_variable" in data else None
-    return gm(resource, graph_type, data_element_x, data_element_y)
+    date_format = '%Y-%m-%d %H:%M:%S'
+    start_date = None
+    end_date = None
+    if data["start_date"]:
+        d = datetime.fromisoformat(data["start_date"][:-1]).astimezone(timezone.utc).strftime(date_format)
+        start_date =  datetime.strptime(d, date_format)
+    if data["end_date"]:
+        d = datetime.fromisoformat(data["end_date"][:-1]).astimezone(timezone.utc).strftime(date_format)
+        end_date =  datetime.strptime(d, date_format)
+    additional_filter_resource = data["filters"] if "filters" in data else None
+    return gm(resource, graph_type, data_element_x, data_element_y, start_date, end_date, additional_filter_resource)
 
 @app.route('/generate', methods=['POST'])
 def ai():
@@ -40,12 +47,12 @@ def ai():
 def index():
     return render_template('index.html')
 
-def gm(resource, graph_type, data_element_x, data_element_y):
+def gm(resource, graph_type, data_element_x, data_element_y, start_date, end_date, advance_filter):
     # read data and define dataframes
     if data_element_y != '' or data_element_y != 'amountvalue':
-        data = query_firely_server(resource=resource, x=data_element_x, y=data_element_y, date_filter=False)
+        data = query_firely_server(resource=resource, x=data_element_x, y=data_element_y, date_from=start_date, date_to=end_date, filters=advance_filter)
     else:
-        data = query_firely_server(resource=resource, x=data_element_x, date_filter=False)
+        data = query_firely_server(resource=resource, x=data_element_x, date_from=start_date, date_to=end_date, filters=advance_filter)
     
     if data_element_y == 'amountvalue':
         df = data.groupby(data_element_x)[data_element_y].sum().reset_index()
