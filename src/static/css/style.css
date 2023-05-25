@@ -50,3 +50,9 @@ body {
   font-size: 28px;
   font-weight: 600;
 }
+
+.container-buttons{
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+}

@@ -5,12 +5,13 @@ var graph_type;
 var resource_type;
 var filter_resouce_type;
 $("#add-graph").click(function () {
+ 
     $('[id^="graph-location"]').bind("click", function () {
-        $("#AI-help").show()
         $('[id^="graph-location"]').off("click");
         graph_location = $(this);
+        $("#AI-help").show();
         $(graph_location).addClass("bg-secondary").removeClass("bg-light");
-        $("#add-graph").next().nextAll().empty();
+        $("#add-graph").next().nextAll().slice(-3).empty();
         showSelectGraph();
     });
 });
@@ -18,7 +19,7 @@ $("#add-graph").click(function () {
 function showSelectGraph() {
     $("#select-graph-div").html(`
         <br>
-        <p> Select the type of graph you want to create </p>
+        <p> Select the type of graph </p>
         <select class="form-select" id="select-graph-type" name="select-graph-type" value="select-graph-type">
             <option style="display: none">Graph type</option>
             <option value="Bar graph">Bar graph</option>
@@ -42,7 +43,7 @@ $(document.body).off('change', '#select-graph-type').on('change', "#select-graph
 function showSelectResource() {
     $("#select-resource-div").html(`
         <br>
-        <p> Now select the a resource for which you want to create a graph </p>
+        <p> Select a FHIR resource</p>
         <select class="form-select" id="select-resource" name="select-resource" value="select-resource">
             <option style="display: none">Resource</option>
             <option value="AdverseEvent">Adverse event</option>
@@ -107,12 +108,13 @@ function showSelectVariable(current_number_of_variables_selected, interface_text
 $(document.body).off('change', '#select-variabele-div select:last').on('change', "#select-variabele-div select:last", function () {
     showSelectDates();
     showAdditionalFilteringResource();
+    $("#filter-button").show();
 });
 
 function showSelectDates() {
     $("#select-dates-div").html(`
         <br>
-        <p> Optionally you can select a start and end date for your data selection to plot a part of the data </p>
+        <p> Optionally filter by date </p>
         <label for="start-date">Start Date:</label>
         <input type="date" id="start-date" name="start-date">
         <br>
@@ -124,7 +126,7 @@ function showSelectDates() {
 function showAdditionalFilteringResource() {
     $("#select-additional-filters").html(`
         <br>
-        <p> Or you can filter your data by another resource <br> For this, first select a resource </p>
+        <p> Optionally filter by another resource </p>
         <select class="form-select" id="select-additional-filter-resource" name="select-additional-filter-resource" value="select-additional-filter-resource">
             <option style="display: none">Resource</option>
             <option value="AdverseEvent">Adverse event</option>
@@ -158,7 +160,6 @@ function showAdditionalFilteringVariable() {
     var possible_filter_variables = getPossibleFilterVariables();
     var select_string = `
         <br>
-        <p> And select a variable </p>
         <select class="form-select" id="select-additional-filter-variable" name="select-additional-filter-variable" value="select-additional-filter-variable">
             <option style="display: none">Variable</option>`;
     possible_filter_variables.then((value) => {
