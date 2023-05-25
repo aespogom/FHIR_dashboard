@@ -28,19 +28,23 @@
       <div id="navbar" class="content collapse show" style="width: 22vw">
         <h1 class="h2 mb-0" style="color: #144272">MedDash</h1> 
         <br>
-        <p>
-          To add a new graph, click the button below, then the place you want to add the graph.
-        </p>
-        <button id="add-graph" type="button" class="btn btn-outline-dark text-white" style = "background-color: #6096B4">Add a new graph</button>
-        <button id="create-graph" type="button" class="btn btn-outline-dark text-white" style = "background-color: #6096B4">
-          <span id="Go-button-text">Go</span>
-          <span id="Go-button-spinner" class="spinner-border spinner-border-sm" style="display: none;"></span>
-        </button>
-        <button id="AI-help" type="button" class="btn btn-outline-dark rounded-circle text-white" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style = "background-color: #6096B4; display: none;">
-          <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-        </button>
-        <button id="filter-button" type="button" class="btn btn-info btn-md" data-bs-toggle="modal" data-bs-target="#advanceFilterModal" style = "background-color: #6096B4; display: none; color: white;">Advance Filtering</button>
-
+        <div class="container-buttons">
+          <button id="add-graph" type="button" class="btn btn-outline-dark text-white" style = "background-color: #6096B4">Add a new graph</button>
+          <button id="create-graph" type="button" class="btn btn-outline-dark text-white" style = "background-color: #6096B4">
+            <span id="Go-button-text">Go</span>
+            <span id="Go-button-spinner" class="spinner-border spinner-border-sm" style="display: none;"></span>
+          </button>
+        </div>
+        <div class="container-buttons">
+          <button id="AI-help" type="button" class="btn btn-outline-dark rounded-circle text-white" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style = "background-color: #6096B4; display: none;" title="AI chatbot">
+            <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+          </button>
+          <button id="filter-button" type="button" class="btn btn-outline-dark rounded-circle text-white" data-bs-toggle="modal" data-bs-target="#advanceFilterModal" style = "background-color: #6096B4; display: none;" title="Filter">
+            <i class="fa fa-filter" aria-hidden="true"></i>
+          </button>
+          
+        </div>
+        
         <div id="select-graph-div">
 
         </div>
