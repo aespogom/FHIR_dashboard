@@ -196,8 +196,9 @@ def query_firely_server(resource: str,
             print(dataframe.head())
         return dataframe
 
-    result.raise_for_status()
-
+    error = requests.Response()
+    error.status_code  = 500
+    return error
 
 
 # # Define the input parameters from frontend/ploty

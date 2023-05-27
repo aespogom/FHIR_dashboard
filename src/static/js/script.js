@@ -255,6 +255,12 @@ function cb(data, graph_location) {
             $("#liveToast").show();
             setTimeout(()=>{$("#liveToast").hide();}, 3000)
         },
+        error: function (request, status, error) {
+            alert(request.responseText);
+            handleGraphTypeChange();
+            $("#Go-button-spinner").hide();
+            $("#Go-button-text").show();
+        }  
     })
 }
 
@@ -314,6 +320,9 @@ function aigpt(prompt) {
         },
         error: function (request, status, error) {
             alert(request.responseText);
+            $("#ai-prompt").empty();
+            $("#ai-button-spinner").hide();
+            $("#ai-button-text").show();
         }  
     })
 }
