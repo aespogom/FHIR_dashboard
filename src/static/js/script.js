@@ -252,6 +252,8 @@ function cb(data, graph_location) {
                 $('#'+graph_location).prepend(close_button);
             }
             $("#Go-button-spinner").hide();
+            $("#liveToast").show();
+            setTimeout(()=>{$("#liveToast").hide();}, 3000)
         },
     })
 }
