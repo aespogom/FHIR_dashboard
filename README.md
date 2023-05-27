@@ -16,7 +16,8 @@ The dashboard can be configured to display graphs that highlight trends, pattern
 2. Navigate to the project
 3. Create a virtual environment
 4. Install the required dependencies
-5. Run the project
+5. Ask for the .env file to the team
+6. Run the project
 
 ## Depencies
 Before running the application, you will need to have the following installed:
@@ -29,18 +30,9 @@ Then, run the following command in your terminal:
 pip install -r requirements.txt
 ```
 
-## Start the Database
-To initiate the database, navigate to the project directory in your terminal and run the following command:
-
-```
-docker-compose -f docker-compose.mssqlserver_host.yml up -d
-```
-
-This will start the Flask development server and the application will be available at http://localhost:8080
-
 
 ## Running the Application
-To run the application, navigate to the project directory in your terminal and run the following command:
+To run the application, navigate to the project directory (within `/src/`) in your terminal and run the following command:
 
 ```
 python -m flask run
@@ -49,11 +41,15 @@ python -m flask run
 This will start the Flask development server and the application will be available at http://localhost:5000.
 
 
-## Backend advance search examples
+## For Developers
+### Backend advance search examples
 The following list is a set of examples that the frontend can include in
 the call query_firely_server from src/backend/queries.py
+
 0. No query:
+
     query_firely_server(resource, x, date_filter, y):
+        
         - resource (string): 'AdverseEvent'
         - x (string): 'actuality'
         - date_filter (bool): False
@@ -62,7 +58,9 @@ the call query_firely_server from src/backend/queries.py
     resulting endpoint: [URL_SERVER]/AdverseEvent
 
 1. Simple query by datetime:
+    
     query_firely_server(resource, x, date_filter, date_from, date_to, y, dict_filter):
+        
         - resource (string): 'AdverseEvent'
         - x (string): 'actuality'
         - date_filter (bool): True
@@ -70,10 +68,12 @@ the call query_firely_server from src/backend/queries.py
         - date_to (datetime, optional): datetime(2022, 5, 23, 0, 0)
         - y (string, optional): None
     
-    resulting endpoint: [URL_SERVER]/AdverseEvent??date=ge2022-05-1&date=le2023-05-23
+    resulting endpoint: `[URL_SERVER]`/AdverseEvent??date=ge2022-05-1&date=le2023-05-23
 
 2. Advance query by datetime + relate to other resource:
+    
     query_firely_server(resource, x, date_filter, date_from, date_to, y, dict_filter):
+        
         - resource (string): 'AdverseEvent'
         - x (string): 'actuality'
         - date_filter (bool): True
@@ -93,10 +93,10 @@ the call query_firely_server from src/backend/queries.py
             }
         }
 
-        resulting endpoint: [URL_SERVER]/AdverseEvent?date=ge2022-05-1&date=le2023-05-23&actuality=test&category=test&code=test&patient.gender=other&patient.family=Donald&patient._has:Observation:patient:code=ABC-DEF
+    resulting endpoint: `[URL_SERVER]`/AdverseEvent?date=ge2022-05-1&date=le2023-05-23&actuality=test&category=test&code=test&patient.gender=other&patient.family=Donald&patient._has:Observation:patient:code=ABC-DEF
 
 
-## Contributing
+### Contributing
 If you'd like to contribute to this project, please fork the repository and submit a pull request.
 1. Fork the Project
 2. Create your Feature Branch (git checkout -b feature/AmazingFeature)
