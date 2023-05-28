@@ -8,6 +8,7 @@ import plotly.graph_objects as go
 import openai
 from flask_bootstrap import Bootstrap5
 from backend.queries import query_firely_server
+import re
 
 app = Flask(__name__)
 bootstrap = Bootstrap5(app)
@@ -47,6 +48,14 @@ def ai():
 def index():
     return render_template('index.html')
 
+def check_date_format(date_string):
+    pattern = r'^\d{4}-\d{2}-\d{2}$'  # Regular expression pattern for "YYYY-MM-DD" format
+    match = re.match(pattern, date_string)
+    if match:
+        return True
+    else:
+        return False
+
 def gm(resource, graph_type, data_element_x, data_element_y, start_date, end_date, advance_filter):
     # read data and define dataframes
     if data_element_y != '' or data_element_y != 'amountvalue':
@@ -54,7 +63,11 @@ def gm(resource, graph_type, data_element_x, data_element_y, start_date, end_dat
     else:
         data = query_firely_server(resource=resource, x=data_element_x, date_from=start_date, date_to=end_date, filters=advance_filter)
     
+    
     if data_element_y == 'amountvalue':
+        if check_date_format(data[data_element_x][0]):
+            data[data_element_x] = data[data_element_x].str[:4]
+
         df = data.groupby(data_element_x)[data_element_y].sum().reset_index()
         df = data.groupby(data_element_x).size().rename('amountvalue').reset_index()
         data = df
