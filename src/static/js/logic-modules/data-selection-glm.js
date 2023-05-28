@@ -1,6 +1,6 @@
 var current_variables_selected = -1;
 var line_graph = ['date', 'int'];
-var bar_graph = ['string'];
+var bar_graph = ['string', 'date'];
 var pie_chart = ['string'];
 var scatter_plot = ['date', 'int'];
 
