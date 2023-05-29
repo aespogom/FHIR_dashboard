@@ -136,7 +136,7 @@
             "component": "string",
             "code": "string",
             "status": "string",
-            "valueDateTime": "date"
+            "effectiveDateTime": "date"
         }
     ],
     "Procedure": [
@@ -150,7 +150,7 @@
             "bodySite": "string",
             "outcome": "string",
             "note": "string",
-            "performedDateTime": "date"
+            "recorded": "date"
         }
     ],
     "Patient": [
