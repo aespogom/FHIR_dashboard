@@ -13,6 +13,11 @@ import pandas as pd
 
 load_dotenv()
 
+headers = {
+  'Accept': 'application/fhir+json; fhirVersion=4.0',
+  'Content-Type': 'application/fhir+json; fhirVersion=4.0',
+}
+
 def build_query_with_filter(resource: str,
                             date_from: Union[datetime, None],
                             date_to: Union[datetime, None],
@@ -174,7 +179,7 @@ def query_firely_server(resource: str,
 
     query = build_query_with_filter(resource=resource, date_from=date_from, date_to=date_to, filters=filters)
     
-    result = requests.get(query)
+    result = requests.get(query, headers=headers)
     
     if result.status_code and result.status_code==200:
         list_registries = []

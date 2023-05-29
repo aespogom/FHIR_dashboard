@@ -150,7 +150,7 @@
             "bodySite": "string",
             "outcome": "string",
             "note": "string",
-            "recorded": "date"
+            "performedDateTime": "date"
         }
     ],
     "Patient": [
