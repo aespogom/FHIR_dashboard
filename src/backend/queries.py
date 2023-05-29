@@ -32,21 +32,16 @@ def build_query_with_filter(resource: str,
   query = os.getenv("URL_SERVER")
 
   # Access resource
-  query = query + resource
+  query = query + resource + '?_count=10000'
 
   #Construct additional queries
   if date_from:
-    query = query + '?date=ge'+date_from.strftime("%Y-%m-%d")
-    if date_to:
-      query = query + '&date=le'+date_to.strftime("%Y-%m-%d")
-  elif date_to:
-    query = query + '?date=le'+date_to.strftime("%Y-%m-%d")
+    query = query + '&date=ge'+date_from.strftime("%Y-%m-%d")
+  if date_to:
+    query = query + '&date=le'+date_to.strftime("%Y-%m-%d")
   
   if filters:
-    if not date_from and not date_to:
-      query = query+'?'
-    else:
-      query = query+'&'
+    query = query+'&'
     for field, search_value in filters.items():
       if isinstance(search_value, dict):
         for subfield, search in search_value.items():
