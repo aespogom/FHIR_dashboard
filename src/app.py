@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime, timezone
 from flask import Flask, config, render_template, request
 import pandas as pd
@@ -9,6 +10,9 @@ import openai
 from flask_bootstrap import Bootstrap5
 from backend.queries import query_firely_server
 import re
+import platform
+if platform.system()=='Windows':
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 app = Flask(__name__)
 bootstrap = Bootstrap5(app)
@@ -60,9 +64,9 @@ def check_date_format(date_string):
 def gm(resource, graph_type, data_element_x, data_element_y, start_date, end_date, advance_filter):
     # read data and define dataframes
     if data_element_y != '' or data_element_y != 'amountvalue':
-        data = query_firely_server(resource=resource, x=data_element_x, y=data_element_y, date_from=start_date, date_to=end_date, filters=advance_filter)
+        data = asyncio.run(query_firely_server(resource=resource, x=data_element_x, y=data_element_y, date_from=start_date, date_to=end_date, filters=advance_filter))
     else:
-        data = query_firely_server(resource=resource, x=data_element_x, date_from=start_date, date_to=end_date, filters=advance_filter)
+        data = asyncio.run(query_firely_server(resource=resource, x=data_element_x, date_from=start_date, date_to=end_date, filters=advance_filter))
     
     
     if data_element_y == 'amountvalue':

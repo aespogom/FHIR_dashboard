@@ -352,7 +352,9 @@ $("#Usebutton").click(function() {
                                 resource: resource_name,
                                 data_element_x: x_name,
                                 data_element_y: y_name,
-                                filters: filter_dict});
+                                filters: filter_dict,
+                                graph_location: graph_location.attr("id")});
+    updateGraphStorage(data);
     cb(data, graph_location.attr("id"));
 })
 

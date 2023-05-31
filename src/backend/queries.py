@@ -2,14 +2,19 @@
     This module contains the available queries for the Firely server
 '''
 
+import asyncio
 from datetime import datetime
 import json
 import os
 from typing import Union
+import aiohttp
 from dotenv import load_dotenv
 import requests
 import backend.utils
 import pandas as pd
+import platform
+if platform.system()=='Windows':
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 load_dotenv()
 
@@ -19,6 +24,8 @@ headers = {
 }
 
 def build_query_with_filter(resource: str,
+                            x: str,
+                            y: Union[str, None],
                             date_from: Union[datetime, None],
                             date_to: Union[datetime, None],
                             filters: Union[dict, None]):
@@ -37,7 +44,7 @@ def build_query_with_filter(resource: str,
   query = os.getenv("URL_SERVER")
 
   # Access resource
-  query = query + resource + '?_count=10000'
+  query = query + resource + '?_count=0'
 
   #Construct additional queries
   if date_from:
@@ -152,7 +159,7 @@ def create_dataframe(dataframe: pd.DataFrame,
   return dataframe
 
 
-def query_firely_server(resource: str,
+async def query_firely_server(resource: str,
                         x: str,
                         date_from: Union[datetime, None] = None,
                         date_to: Union[datetime, None] = None,
@@ -177,7 +184,12 @@ def query_firely_server(resource: str,
       A dataframe with the resource information filtered
     '''
 
-    query = build_query_with_filter(resource=resource, date_from=date_from, date_to=date_to, filters=filters)
+    query = build_query_with_filter(resource=resource,
+                                    x=x,
+                                    y=y,
+                                    date_from=date_from,
+                                    date_to=date_to,
+                                    filters=filters)
     
     result = requests.get(query, headers=headers)
     
@@ -185,16 +197,25 @@ def query_firely_server(resource: str,
         list_registries = []
         dataframe = pd.DataFrame(columns = [x, y])
         bundle = result.json()
-        if bundle['total']:
-            for entry in list(bundle['entry']):
-                if entry['resource']['resourceType']=='OperationOutcome':
-                  print('This resource does not support this filter!')
-                else:
-                  registry = eval("backend.utils."+resource.lower()+"."+resource+"(entry['resource'])")
-                  list_registries.append(registry)
-            dataframe = create_dataframe(dataframe,x,y,list_registries)
-            print(dataframe.head())
-        return dataframe
+        if bundle['total'] and int(bundle['total']):
+            print('start async for '+str(bundle['total'])+' registries')
+            async with aiohttp.ClientSession() as session:
+              for skip in range(0, int(bundle['total']), 1000):
+                async with session.get(query.replace("?_count=0", "?_count=1000")+'&_skip='+str(skip),
+                                       headers=headers) as resp:
+                  bundle = await resp.json()
+                  print('total bundles returned are '+str(skip+1000))
+                  
+                  for entry in list(bundle['entry']):
+                      if entry['resource']['resourceType']=='OperationOutcome':
+                        print('This resource does not support this filter!')
+                      else:
+                        registry = eval("backend.utils."+resource.lower()+"."+resource+"(entry['resource'])")
+                        list_registries.append(registry)
+              dataframe = create_dataframe(dataframe,x,y,list_registries)
+              return dataframe
+        else:
+          return dataframe
 
     error = requests.Response()
     error.status_code  = 500
