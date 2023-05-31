@@ -279,13 +279,14 @@ $("#ai-prompt").keyup(function (event) {
 function aigpt(prompt) {
     $("#ai-button-text").hide()
     $("#ai-button-spinner").show() 
+    let responseText = "";
     let input_prompt = `\
         Upon receiving a free text string, the model will:
         1. Identify a type of graph mentioned in the provided list: "Line graph, Bar graph, Pie chart, Scatter plot." The model will extract the corresponding type of graph as a string.
         2. Identify a type of FHIR resource mentioned in the provided list: """AdverseEvent, AllergyIntolerance, CarePlan, ClaimResponse, Condition, DetectedIssue, InsurancePlan, Medication, Observation, Procedure, RiskAssessment, Encounter, Patient""". The model will extract the corresponding FHIR resource as a string.
         3. Extract one or two attributes related to the FHIR resource mentioned in step 2. The model will verify that the mentioned attribute(s) are included in the official FHIR R4 resource.
         4. Identify a set of filters. Each filter consists of one FHIR resource, one attribute, and one value to filter by. The filter FHIR resource should be included in the provided list: """AdverseEvent, AllergyIntolerance, CarePlan, ClaimResponse, Condition, DetectedIssue, InsurancePlan, Medication, Observation, Procedure, RiskAssessment, Encounter, Patient""". The filter FHIR resource may be different from the identified resource in step 1. The filter attribute is included in the official FHIR R4. The model will extract the corresponding set of filters as a key-value dictionary. The dictionary key will be a string corresponding to the filter resource. For each filter resource, a new key should be set. The value of the dictionary will be an embedded dictionary. The embedded dictionary has a key corresponding to the filter attribute and a value corresponding to the filter value. Exclude from the response all of the following characters: <, >, ==, != .
-        The resulting keywords will be returned as a comma-separated string.
+        The resulting keywords will be returned as a semicolon-separated string.
         If it is not possible to extract any keyword, an empty string will be returned.
         If no type of graph is mentioned and two attributes are identified, return Line graph.
         If no type of graph is mentioned and one attribute is identified, return Pie chart.
@@ -293,10 +294,10 @@ function aigpt(prompt) {
         If no attributes are identified, return date and amountvalue.
         If no filters are identified, return {}.
         Free text string 1: """I want to plot patient age versus gender as bars."""
-        Keywords 1: Bar graph, Patient, age, gender, {}
+        Keywords 1: Bar graph; Patient; age; gender; {}
         ##
         Free text string 2: """Display a plot where the allergy codes are scattered against the severity from January 2023.
-        Keywords 2: Scatter plot, AllergyIntolerance, code, severity, {'AllergyIntolerance': {'date': '2023-01-01'}}
+        Keywords 2: Scatter plot; AllergyIntolerance; code; severity; {"AllergyIntolerance": {"date": "2023-01-01"}}
         ##
         Free text string 3: """${prompt}"""
         Keywords 3:
@@ -328,28 +329,30 @@ function aigpt(prompt) {
 }
 
 $("#Usebutton").click(function() {
-    const MyArray = $("#ai-result").val().split(",")
-
-    let varplot = MyArray[0]
-    let varresource1 = MyArray[1]
-    let varresource = varresource1.replace(" ", "")
-    let varvar1 = MyArray[2]
-    let varvar = varvar1.replace(" ", "")
-    let var2var = ''
+    const MyArray = $("#ai-result").val().split(";")
+    let graph_name = MyArray[0].substring(1)
+    let resource_name = MyArray[1]
+    resource_name = resource_name.replace(" ", "")
+    let x_name = MyArray[2]
+    x_name = x_name.replace(" ", "")
+    let y_name = ''
     if (MyArray[3] !== undefined) {
-        let var2var1 = MyArray[3]
-        var2var = var2var1.replace(" ","")
+        y_name = MyArray[3].replace(" ","")
     }  
-    let identified_filters = {}
-    if (MyArray[4] !== '{}') {
-        identified_filters = MyArray[3]
+    let filter_dict = new Map()
+    if (MyArray[4] !== ' {}') {
+        let identified_filters = JSON.parse(MyArray[4].substring(1));
+        Object.keys(identified_filters).forEach(function (key_name, i) {
+            filter_dict.set(key_name, identified_filters[key_name])
+        });
+        filter_dict=mapToJSON(filter_dict);
     }     
 
-    var data = JSON.stringify({graph_type: varplot,
-                                resource: varresource,
-                                data_element_x: varvar,
-                                data_element_y: var2var,
-                                filters: identified_filters});
+    var data = JSON.stringify({graph_type: graph_name,
+                                resource: resource_name,
+                                data_element_x: x_name,
+                                data_element_y: y_name,
+                                filters: filter_dict});
     cb(data, graph_location.attr("id"));
 })
 

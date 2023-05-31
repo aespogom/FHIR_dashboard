@@ -16,6 +16,7 @@ bootstrap = Bootstrap5(app)
 @app.route('/callback', methods=['POST', 'GET'])
 def cb():
     data = request.get_json()
+    print(data)
     graph_type = data["graph_type"]
     resource = data["resource"]
     data_element_x = data["data_element_x"]
@@ -23,10 +24,10 @@ def cb():
     date_format = '%Y-%m-%d %H:%M:%S'
     start_date = None
     end_date = None
-    if data["start_date"]:
+    if "start_date" in data and data["start_date"]:
         d = datetime.fromisoformat(data["start_date"][:-1]).astimezone(timezone.utc).strftime(date_format)
         start_date =  datetime.strptime(d, date_format)
-    if data["end_date"]:
+    if "end_date" in data and data["end_date"]:
         d = datetime.fromisoformat(data["end_date"][:-1]).astimezone(timezone.utc).strftime(date_format)
         end_date =  datetime.strptime(d, date_format)
     additional_filter_resource = data["filters"] if "filters" in data else None
