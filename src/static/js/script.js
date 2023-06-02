@@ -370,8 +370,52 @@ $(window).on('resize', function () {
 });
 
 $("#generate-data").click(function () {
-    var jsonString = '{"graph_type":"Pie chart","resource":"AllergyIntolerance","data_element_x":"text","data_element_y":"","start_date":null,"end_date":null,"additional_filter_resource":"Resource","additional_filter_variable":null}';
-    var dataArray = [jsonString, jsonString, jsonString];
+    var scenario_1 = '{"graph_type":"Line graph",\
+    "resource":"Observation",\
+    "data_element_x":"effectiveDateTime",\
+    "data_element_y":"amountvalue",\
+    "start_date":null,\
+    "end_date":null,\
+    "filters":{"value_quantity":"28,29,30,31,32,33,34,35,36,37"},\
+    "graph_location": "graph-location-1"}'
+
+    var scenario_2 = '{"graph_type":"Bar graph",\
+    "resource":"Procedure",\
+    "data_element_x":"performedDateTime",\
+    "data_element_y":"amountvalue",\
+    "start_date":null,\
+    "end_date":null,\
+    "filters":{"code":"CT"},\
+    "graph_location": "graph-location-2"}'
+
+    var scenario_3 = '{"graph_type":"Pie chart",\
+    "resource":"Procedure",\
+    "data_element_x":"code",\
+    "data_element_y":"",\
+    "start_date":"2020-01-01T",\
+    "end_date":"2024-01-01T",\
+    "filters":{},\
+    "graph_location": "graph-location-3"}'
+
+    var scenario_4 = '{"graph_type":"Line graph",\
+    "resource":"Patient",\
+    "data_element_x":"birthDate",\
+    "data_element_y":"amountvalue",\
+    "start_date":"",\
+    "end_date":"",\
+    "filters":{},\
+    "graph_location": "graph-location-4"}'
+
+    var scenario_5 = '{"graph_type":"Pie chart",\
+    "resource":"Medication",\
+    "data_element_x":"code",\
+    "data_element_y":"",\
+    "start_date":"2020-01-01T",\
+    "end_date":"2024-01-01T",\
+    "filters":{},\
+    "graph_location": "graph-location-5"}'
+
+    var dataArray = [scenario_1, scenario_2, scenario_3, scenario_4, scenario_5];
     localStorage.setItem("graphs", JSON.stringify(dataArray));
 })
 

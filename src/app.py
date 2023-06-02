@@ -70,7 +70,7 @@ def gm(resource, graph_type, data_element_x, data_element_y, start_date, end_dat
     
     
     if data_element_y == 'amountvalue':
-        if check_date_format(data[data_element_x][0]):
+        if len(data[data_element_x]) and check_date_format(data[data_element_x][0]):
             data[data_element_x] = data[data_element_x].str[:4]
 
         df = data.groupby(data_element_x)[data_element_y].sum().reset_index()
@@ -81,7 +81,7 @@ def gm(resource, graph_type, data_element_x, data_element_y, start_date, end_dat
     y_var = data[data_element_y]
 
     # Define the chart
-    title = graph_type + " plotting " + data_element_x + (" and " + data_element_y if data_element_y != "" else "")
+    title = resource+" " + data_element_x + (" vs " + data_element_y if data_element_y != "" else "")
 
     if graph_type == 'Line graph':
         fig = go.Figure(data=[go.Scatter(x=x_var, y=y_var, mode='lines')])

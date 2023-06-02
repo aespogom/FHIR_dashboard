@@ -156,7 +156,8 @@
     "Patient": [
         {
             "active": "int",
-            "gender": "string"
+            "gender": "string",
+            "birthDate": "date"
         }
     ],
     "RiskAssessment": [
