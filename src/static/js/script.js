@@ -4,11 +4,30 @@ var graph_location;
 var graph_type;
 var resource_type;
 var filter_resouce_type;
+
+$(document).ready(function () {
+    $("#preset-2").hide();
+    $("#preset-3").hide();
+
+    $("button[id^='preset-']").click(function () {
+        var id = $(this).attr("id");
+        var number = id.split("-")[1];
+
+        $("div[id^='preset-']:visible").hide();
+
+        $("#preset-" + number).show();
+    });
+});
+
 $("#add-graph").click(function () {
  
     $('[id^="graph-location"]').bind("click", function () {
         $('[id^="graph-location"]').off("click");
         graph_location = $(this);
+        if (graph_location.find(".plot-container").length > 0) {  
+            alert("This container already contains a graph! Select another container or delete the current graph first.");
+            return
+        }
         $("#AI-help").show();
         $(graph_location).addClass("bg-secondary").removeClass("bg-light");
         $("#add-graph").next().nextAll().slice(-3).empty();
@@ -241,6 +260,11 @@ function cb(data, graph_location) {
         dataType: 'json',
         success: function (data) {
             $("#Go-button-text").show();
+            $('#select-graph-div').empty();
+            $("#select-resource-div").empty();
+            $("#select-variabele-div").empty();
+            $("#AI-help").hide();
+            $("#filter-button").hide();
             $("#"+graph_location).removeClass("bg-secondary").addClass("bg-light");
             Plotly.newPlot(graph_location, data, {staticPlot: true});
             if ($('#'+graph_location).find('#close-button').length === 0){
@@ -312,11 +336,11 @@ function aigpt(prompt) {
         dataType: 'json',
         success: function (response) {
             console.log(response);
-            $("#ai-button-text").show()
-            $("#ai-button-spinner").hide()
+            $("#ai-button-text").show();
+            $("#ai-button-spinner").hide();
             if (response.choices && response.choices.length) {
                 responseText = response.choices[0].text?.replaceAll('\n', "");
-                $("#ai-result").text(responseText);
+                $("#ai-result").val(responseText);
             }
         },
         error: function (request, status, error) {
@@ -329,19 +353,19 @@ function aigpt(prompt) {
 }
 
 $("#Usebutton").click(function() {
-    const MyArray = $("#ai-result").val().split(";")
-    let graph_name = MyArray[0].substring(1)
-    let resource_name = MyArray[1]
+    const ai_result = $("#ai-result").val().split(";")
+    let graph_name = ai_result[0].substring(1)
+    let resource_name = ai_result[1]
     resource_name = resource_name.replace(" ", "")
-    let x_name = MyArray[2]
+    let x_name = ai_result[2]
     x_name = x_name.replace(" ", "")
     let y_name = ''
-    if (MyArray[3] !== undefined) {
-        y_name = MyArray[3].replace(" ","")
+    if (ai_result[3] !== undefined) {
+        y_name = ai_result[3].replace(" ","")
     }  
-    let filter_dict = new Map()
-    if (MyArray[4] !== ' {}') {
-        let identified_filters = JSON.parse(MyArray[4].substring(1));
+    let filter_dict = new Map();
+    if (ai_result[4] !== undefined && ai_result[4].length > 0) {
+        let identified_filters = JSON.parse(ai_result[4].substring(1));
         Object.keys(identified_filters).forEach(function (key_name, i) {
             filter_dict.set(key_name, identified_filters[key_name])
         });
@@ -356,6 +380,8 @@ $("#Usebutton").click(function() {
                                 graph_location: graph_location.attr("id")});
     updateGraphStorage(data);
     cb(data, graph_location.attr("id"));
+    $("#ai-prompt").val("");
+    $("#ai-result").val("");
 })
 
 $(window).on('resize', function () {

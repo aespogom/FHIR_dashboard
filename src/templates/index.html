@@ -38,10 +38,12 @@
           </button>
         </div>
         <div class="container-buttons">
-          <button id="AI-help" type="button" class="btn btn-outline-dark rounded-circle text-white" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style = "background-color: #6096B4; display: none;" title="AI chatbot">
+          <button id="AI-help" type="button" class="btn btn-outline-dark text-white" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style = "background-color: #6096B4; display: none;" title="AI chatbot">
+            Help me create a graph
             <i class="fa fa-question-circle-o" aria-hidden="true"></i>
           </button>
-          <button id="filter-button" type="button" class="btn btn-outline-dark rounded-circle text-white" data-bs-toggle="modal" data-bs-target="#advanceFilterModal" style = "background-color: #6096B4; display: none;" title="Filter">
+          <button id="filter-button" type="button" class="btn btn-outline-dark text-white" data-bs-toggle="modal" data-bs-target="#advanceFilterModal" style = "background-color: #6096B4; display: none;" title="Filter">
+            Additional filters
             <i class="fa fa-filter" aria-hidden="true"></i>
           </button>
           
@@ -60,30 +62,94 @@
 
     </div>
     <div class="col">
-      <div class="row g-2">
-        <div class="col-lg-6 p-2">
-          <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-1">
-            <div id="chart" class="chart"></div>
+      <button id="preset-1-button" type="button" class="btn btn-outline-dark text-white" style = "background-color: #6096B4">Preset 1</button>
+      <button id="preset-2-button" type="button" class="btn btn-outline-dark text-white" style = "background-color: #6096B4">Preset 2</button>
+      <button id="preset-3-button" type="button" class="btn btn-outline-dark text-white" style = "background-color: #6096B4">Preset 3</button>
+      <div id="preset-1">
+        <h3 contenteditable="true">Preset 1</h3>
+        <div class="row g-2">
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-1">
+              <div id="chart" class="chart"></div>
+            </div>
+          </div>
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-2"></div>
           </div>
         </div>
-        <div class="col-lg-6 p-2">
-          <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-2"></div>
+        <div class="row g-2">
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-3"></div>
+          </div>
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-4"></div>
+          </div>
+        </div>
+        <div class="row g-2">
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-5"></div>
+          </div>
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-6"></div>
+          </div>
         </div>
       </div>
-      <div class="row g-2">
-        <div class="col-lg-6 p-2">
-          <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-3"></div>
+      <div id="preset-2">
+        <h3 contenteditable="true">Preset 2</h3>
+        <div class="row g-2">
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-7">
+              <div id="chart" class="chart"></div>
+            </div>
+          </div>
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-8"></div>
+          </div>
         </div>
-        <div class="col-lg-6 p-2">
-          <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-4"></div>
+        <div class="row g-2">
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-9"></div>
+          </div>
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-10"></div>
+          </div>
+        </div>
+        <div class="row g-2">
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-11"></div>
+          </div>
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-12"></div>
+          </div>
         </div>
       </div>
-      <div class="row g-2">
-        <div class="col-lg-6 p-2">
-          <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-5"></div>
+      <div id="preset-3">
+        <h3 contenteditable="true">Preset 3</h3>
+        <div class="row g-2">
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-13">
+              <div id="chart" class="chart"></div>
+            </div>
+          </div>
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-14"></div>
+          </div>
         </div>
-        <div class="col-lg-6 p-2">
-          <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-6"></div>
+        <div class="row g-2">
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-15"></div>
+          </div>
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-16"></div>
+          </div>
+        </div>
+        <div class="row g-2">
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-17"></div>
+          </div>
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-18"></div>
+          </div>
         </div>
       </div>
     </div>

@@ -81,7 +81,7 @@ def gm(resource, graph_type, data_element_x, data_element_y, start_date, end_dat
     y_var = data[data_element_y]
 
     # Define the chart
-    title = resource+" " + data_element_x + (" vs " + data_element_y if data_element_y != "" else "")
+    title = "Plotting " + resource +" data of " + data_element_x + (" vs " + data_element_y if data_element_y != "" and data_element_y != "{}" else "")
 
     if graph_type == 'Line graph':
         fig = go.Figure(data=[go.Scatter(x=x_var, y=y_var, mode='lines')])
