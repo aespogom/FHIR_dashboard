@@ -12,12 +12,12 @@ import requests
 from backend.queries import query_firely_server
 import re
 import platform
+
 if platform.system()=='Windows':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 app = Flask(__name__)
 bootstrap = Bootstrap5(app)
-load_dotenv()
 
 @app.route('/callback', methods=['POST', 'GET'])
 def cb():
@@ -111,3 +111,5 @@ def gm(resource, graph_type, data_element_x, data_element_y, start_date, end_dat
     print(fig.data[0])
     
     return graphJSON
+
+app.run(host='0.0.0.0', port=5000, threaded=True, load_dotenv=True)

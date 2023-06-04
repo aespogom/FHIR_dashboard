@@ -210,7 +210,7 @@ async def query_firely_server(resource: str,
           tasks = [asyncio.create_task(task_async(session, query, skip, resource)) for skip in range(0, int(bundle['total']), 1000)]
           done,_ = await asyncio.wait(tasks)
           for future in done:
-            cache[query] = cache[query]+future.result()
+            cache[query].extend(future.result())
             dataframe = create_dataframe(dataframe,x,y,future.result())
         
         return dataframe
