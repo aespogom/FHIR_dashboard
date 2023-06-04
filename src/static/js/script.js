@@ -436,9 +436,9 @@ $("#generate-data").click(function () {
     "resource":"Medication",\
     "data_element_x":"code",\
     "data_element_y":"",\
-    "start_date":"2020-01-01T",\
-    "end_date":"2024-01-01T",\
-    "filters":{},\
+    "start_date":"",\
+    "end_date":"",\
+    "filters":{"code":"100,101,102,103,104,105,106,107,108,109,110"},\
     "graph_location": "graph-location-5"}'
 
     var dataArray = [scenario_1, scenario_2, scenario_3, scenario_4, scenario_5];

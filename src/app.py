@@ -111,5 +111,3 @@ def gm(resource, graph_type, data_element_x, data_element_y, start_date, end_dat
     print(fig.data[0])
     
     return graphJSON
-
-app.run(host='0.0.0.0', port=5000, threaded=True, load_dotenv=True)

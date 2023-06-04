@@ -207,7 +207,7 @@ async def query_firely_server(resource: str,
       if bundle['total'] and int(bundle['total']):
         print('start async for '+str(bundle['total'])+' registries')
         async with aiohttp.ClientSession() as session:
-          tasks = [asyncio.create_task(task_async(session, query, skip, resource)) for skip in range(0, int(bundle['total']), 1000)]
+          tasks = [asyncio.create_task(task_async(session, query, skip, resource)) for skip in range(0, int(bundle['total']), 100)]
           done,_ = await asyncio.wait(tasks)
           for future in done:
             cache[query].extend(future.result())
@@ -222,10 +222,10 @@ async def query_firely_server(resource: str,
     return error
 
 async def task_async(session,query,skip,resource):
-  resp = await session.get(query.replace("?_count=0", "?_count=1000")+'&_skip='+str(skip),
+  resp = await session.get(query.replace("?_count=0", "?_count=100")+'&_skip='+str(skip),
     headers=headers)
   bundle =  await resp.json()
-  print('total bundles returned are '+str(skip+1000))
+  print('total bundles returned are '+str(skip+100))
   array_registries=[]
   for entry in list(bundle['entry']):
     if entry['resource']['resourceType']=='OperationOutcome':
