@@ -402,7 +402,7 @@ $("#generate-data").click(function () {
     "data_element_y":"amountvalue",\
     "start_date":null,\
     "end_date":null,\
-    "filters":{"value_quantity":"28,29,30,31,32,33,34,35,36,37"},\
+    "filters":{"value-quantity":"28,29,30,31,32,33,34,35,36,37"},\
     "graph_location": "graph-location-1"}'
 
     var scenario_2 = '{"graph_type":"Bar graph",\
