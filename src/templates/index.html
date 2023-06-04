@@ -14,21 +14,21 @@
 
 <div class="container-fluid">
   <div class="br-container">
-    <button id="generate-data" class="br-icon"><i class="fa fa-database" style="color: #fcfcfc;font-size:36px;"></i></button>
-    <button id="export" class="br-icon"><i class="fa fa-cloud-download" style="color: #fcfcfc;font-size:36px;"></i></button>
-    <button id="import" class="br-icon"><i class="fa fa-cloud-upload" style="color: #fcfcfc;font-size:36px;"></i></button>
+    <button id="generate-data" class="br-icon" title="Generate Data" ><i class="fa fa-database" style="color: #fcfcfc;font-size:36px;"></i></button>
+    <button id="export" class="br-icon" title="Export"><i class="fa fa-cloud-download" style="color: #fcfcfc;font-size:36px;"></i></button>
+    <button id="import" class="br-icon" title="Import"><i class="fa fa-cloud-upload" style="color: #fcfcfc;font-size:36px;"></i></button>
   </div>
 
   <div class="row">
   </div>
   <div class="row min-vh-100">
     <div class="col-auto text-white pt-2 position-relative" style="background-color: #93BFCF; min-width: 45px">
-      <button id="collapsebutton" class="btn btn-outline-secondary position-absolute top-0 end-0 mt-2 me-2"
+      <button id="collapsebutton" title="Collapse" class="btn btn-outline-secondary position-absolute top-0 end-0 mt-2 me-2"
         data-bs-toggle="collapse" data-bs-target="#navbar" aria-expanded="true">
         <i class="fa fa-angle-left" aria-hidden="true"></i>
       </button>
       <div id="navbar" class="content collapse show" style="width: 22vw">
-        <img src="/static/img/Med2.png" class="img-thumbnail border-0 bg-transparent" width="250xp">
+        <img src="/static/img/Med2.png" class="img-thumbnail border-0 bg-transparent" width="280px">
         <br>
         <div class="container-buttons">
           <button id="add-graph" type="button" class="btn btn-outline-dark text-white" style = "background-color: #6096B4">Add a new graph</button>
@@ -220,7 +220,7 @@
   <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="toast-header">
       <!-- TODO add logo here -->
-      <img src="..." class="rounded me-2" alt="...">
+      <img src="/static/img/Med2.png" class="rounded me-2" width="40px">
       <strong class="me-auto">Graph created</strong>
     </div>
     <div class="toast-body">
