@@ -1,13 +1,14 @@
 import asyncio
 from datetime import datetime, timezone
-from flask import Flask, config, render_template, request
-import pandas as pd
+import os
+from dotenv import load_dotenv
+from flask import Flask, render_template, request
 import json
 import plotly
-import plotly.express as px
 import plotly.graph_objects as go
 import openai
 from flask_bootstrap import Bootstrap5
+import requests
 from backend.queries import query_firely_server
 import re
 import platform
@@ -16,6 +17,7 @@ if platform.system()=='Windows':
 
 app = Flask(__name__)
 bootstrap = Bootstrap5(app)
+load_dotenv()
 
 @app.route('/callback', methods=['POST', 'GET'])
 def cb():
@@ -51,6 +53,13 @@ def ai():
 
 @app.route('/')
 def index():
+    server_response = requests.get(os.getenv("URL_SERVER")+"metadata")
+    if not server_response.status_code or server_response.status_code != 200 or server_response.json()['status'] != 'active':
+        error = requests.Response
+        error.status_code = 500
+        return error
+    else:
+        print('Server running')
     return render_template('index.html')
 
 def check_date_format(date_string):

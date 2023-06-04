@@ -1,5 +1,5 @@
 '''
-    This module contains the available queries for the Firely server
+  This module contains the available queries for the Firely server
 '''
 
 import asyncio
@@ -14,9 +14,11 @@ import backend.utils
 import pandas as pd
 import platform
 if platform.system()=='Windows':
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+  asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 load_dotenv()
+
+cache={}
 
 headers = {
   'Accept': 'application/fhir+json; fhirVersion=4.0',
@@ -191,36 +193,48 @@ async def query_firely_server(resource: str,
                                     date_to=date_to,
                                     filters=filters)
     
+    if query in cache:
+      dataframe = pd.DataFrame(columns = [x, y])
+      dataframe = create_dataframe(dataframe,x,y,cache[query])
+      return dataframe
+    
     result = requests.get(query, headers=headers)
     
     if result.status_code and result.status_code==200:
-        list_registries = []
-        dataframe = pd.DataFrame(columns = [x, y])
-        bundle = result.json()
-        if bundle['total'] and int(bundle['total']):
-            print('start async for '+str(bundle['total'])+' registries')
-            async with aiohttp.ClientSession() as session:
-              for skip in range(0, int(bundle['total']), 1000):
-                async with session.get(query.replace("?_count=0", "?_count=1000")+'&_skip='+str(skip),
-                                       headers=headers) as resp:
-                  bundle = await resp.json()
-                  print('total bundles returned are '+str(skip+1000))
-                  
-                  for entry in list(bundle['entry']):
-                      if entry['resource']['resourceType']=='OperationOutcome':
-                        print('This resource does not support this filter!')
-                      else:
-                        registry = eval("backend.utils."+resource.lower()+"."+resource+"(entry['resource'])")
-                        list_registries.append(registry)
-              dataframe = create_dataframe(dataframe,x,y,list_registries)
-              return dataframe
-        else:
-          return dataframe
+      dataframe = pd.DataFrame(columns = [x, y])
+      cache[query] = []
+      bundle = result.json()
+      if bundle['total'] and int(bundle['total']):
+        print('start async for '+str(bundle['total'])+' registries')
+        async with aiohttp.ClientSession() as session:
+          tasks = [asyncio.create_task(task_async(session, query, skip, resource)) for skip in range(0, int(bundle['total']), 1000)]
+          done,_ = await asyncio.wait(tasks)
+          for future in done:
+            cache[query] = cache[query]+future.result()
+            dataframe = create_dataframe(dataframe,x,y,future.result())
+        
+        return dataframe
+      else:
+        return dataframe
 
     error = requests.Response()
     error.status_code  = 500
     return error
 
+async def task_async(session,query,skip,resource):
+  resp = await session.get(query.replace("?_count=0", "?_count=1000")+'&_skip='+str(skip),
+    headers=headers)
+  bundle =  await resp.json()
+  print('total bundles returned are '+str(skip+1000))
+  array_registries=[]
+  for entry in list(bundle['entry']):
+    if entry['resource']['resourceType']=='OperationOutcome':
+      print('This resource does not support this filter!')
+    else:
+      registry = eval("backend.utils."+resource.lower()+"."+resource+"(entry['resource'])")
+      array_registries.append(registry)
+  return array_registries
+      
 
 # # Define the input parameters from frontend/ploty
 
