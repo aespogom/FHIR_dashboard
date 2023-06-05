@@ -6,6 +6,7 @@ var resource_type;
 var filter_resouce_type;
 
 $(document).ready(function () {
+    localStorage.clear();
     $("#preset-2").hide();
     $("#preset-3").hide();
 
