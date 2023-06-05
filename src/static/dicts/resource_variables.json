@@ -155,6 +155,7 @@
     ],
     "Patient": [
         {
+            "amountvalue": "int",
             "active": "int",
             "gender": "string",
             "birthDate": "date"
