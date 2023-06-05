@@ -74,14 +74,14 @@ def parse_result_plotly(x_value, x_datatype,
   if x_datatype in [int, float, 'Ratio', 'Money', 'Quantity', 'Range', 'RatioRange', 'RiskAssessmentPrediction', 'Duration','ClaimResponseTotal', 'ClaimResponsePayment', 'MedicationIngredient']:
     x_result = int(0 if x_value is None else x_value)
   elif x_datatype == backend.utils.fhirdate.FHIRDate:
-    x_result = str(x_value.split('T')[0])
+    x_result = str(x_value.split('T')[0] if x_value is not None else str(x_value))
   else:
     x_result = str(x_value)
 
   if y_datatype in [int, float, 'Ratio', 'Money', 'Quantity', 'Range', 'RatioRange', 'RiskAssessmentPrediction', 'Duration','ClaimResponseTotal', 'ClaimResponsePayment', 'MedicationIngredient']:
     y_result = int(0 if y_value is None else y_value)
   elif y_datatype == backend.utils.fhirdate.FHIRDate:
-    y_result = str(y_value.split('T')[0])
+    y_result = str(y_value.split('T')[0] if y_value is not None else str(y_value))
   else:
     y_result = str(y_value)
   
@@ -154,10 +154,11 @@ def create_dataframe(dataframe: pd.DataFrame,
         x_value = eval("registry_as_json"+x_access) if registry_as_json.get(x_col) else None
         y_value = eval("registry_as_json"+y_access) if y_col and registry_as_json.get(y_col) else None
         x_value, y_value = parse_result_plotly(x_value, x_datatype, y_value, y_datatype)
-        dataframe.loc[len(dataframe)] = [str(x_value), y_value]
       except Exception as e:
+         x_value=None
+         y_value=None
          print('There is an inconsistency in the database, skiping one registry ' +str(e))
-
+      dataframe.loc[len(dataframe)] = [str(x_value), y_value]
   return dataframe
 
 
