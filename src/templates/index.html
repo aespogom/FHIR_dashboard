@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% block title %}Care Dashboard{% endblock %}
+{% block content %}
+<!-- <script>
+  d = {{ graphJSON | safe }};
+  d.config={staticPlot: true};
+  Plotly.newPlot('chart', d, {});
+</script> -->
+
+<head>
+  <title>font awesome icons</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<div class="container-fluid">
+  <div class="br-container">
+    <button id="generate-data" class="br-icon" title="Generate Data" ><i class="fa fa-database" style="color: #fcfcfc;font-size:36px;"></i></button>
+    <button id="export" class="br-icon" title="Export"><i class="fa fa-cloud-download" style="color: #fcfcfc;font-size:36px;"></i></button>
+    <button id="import" class="br-icon" title="Import"><i class="fa fa-cloud-upload" style="color: #fcfcfc;font-size:36px;"></i></button>
+  </div>
+
+  <div class="row">
+  </div>
+  <div class="row min-vh-100">
+    <div class="col-auto text-white pt-2 position-relative" style="background-color: #93BFCF; min-width: 45px">
+      <button id="collapsebutton" title="Collapse" class="btn btn-outline-secondary position-absolute top-0 end-0 mt-2 me-2"
+        data-bs-toggle="collapse" data-bs-target="#navbar" aria-expanded="true">
+        <i class="fa fa-angle-left" aria-hidden="true"></i>
+      </button>
+      <div id="navbar" class="content collapse show" style="width: 22vw">
+        <img src="/static/img/Med2.png" class="img-thumbnail border-0 bg-transparent" width="280px">
+        <br>
+        <div class="container-buttons">
+          <button id="add-graph" type="button" class="btn btn-outline-dark text-white" style = "background-color: #6096B4">Add a new graph</button>
+          <button id="create-graph" type="button" class="btn btn-outline-dark text-white" style = "background-color: #6096B4">
+            <span id="Go-button-text">Go</span>
+            <span id="Go-button-spinner" class="spinner-border spinner-border-sm" style="display: none;"></span>
+          </button>
+        </div>
+        <div class="container-buttons">
+          <button id="AI-help" type="button" class="btn btn-outline-dark text-white" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style = "background-color: #6096B4; display: none;" title="AI chatbot">
+            Help me create a graph
+            <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+          </button>
+          <button id="filter-button" type="button" class="btn btn-outline-dark text-white" data-bs-toggle="modal" data-bs-target="#advanceFilterModal" style = "background-color: #6096B4; display: none;" title="Filter">
+            Additional filters
+            <i class="fa fa-filter" aria-hidden="true"></i>
+          </button>
+          
+        </div>
+        
+        <div id="select-graph-div">
+
+        </div>
+        <div id="select-resource-div">
+
+        </div>
+        <div id="select-variabele-div">
+
+        </div>
+      </div>
+
+    </div>
+    <div class="col">
+      <button id="preset-1-button" type="button" class="btn btn-outline-dark text-white" style = "background-color: #6096B4">Preset 1</button>
+      <button id="preset-2-button" type="button" class="btn btn-outline-dark text-white" style = "background-color: #6096B4">Preset 2</button>
+      <button id="preset-3-button" type="button" class="btn btn-outline-dark text-white" style = "background-color: #6096B4">Preset 3</button>
+      <div id="preset-1">
+        <h3 contenteditable="true">Preset 1</h3>
+        <div class="row g-2">
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-1">
+              <div id="chart" class="chart"></div>
+            </div>
+          </div>
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-2"></div>
+          </div>
+        </div>
+        <div class="row g-2">
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-3"></div>
+          </div>
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-4"></div>
+          </div>
+        </div>
+        <div class="row g-2">
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-5"></div>
+          </div>
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-6"></div>
+          </div>
+        </div>
+      </div>
+      <div id="preset-2">
+        <h3 contenteditable="true">Preset 2</h3>
+        <div class="row g-2">
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-7">
+              <div id="chart" class="chart"></div>
+            </div>
+          </div>
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-8"></div>
+          </div>
+        </div>
+        <div class="row g-2">
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-9"></div>
+          </div>
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-10"></div>
+          </div>
+        </div>
+        <div class="row g-2">
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-11"></div>
+          </div>
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-12"></div>
+          </div>
+        </div>
+      </div>
+      <div id="preset-3">
+        <h3 contenteditable="true">Preset 3</h3>
+        <div class="row g-2">
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-13">
+              <div id="chart" class="chart"></div>
+            </div>
+          </div>
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-14"></div>
+          </div>
+        </div>
+        <div class="row g-2">
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-15"></div>
+          </div>
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-16"></div>
+          </div>
+        </div>
+        <div class="row g-2">
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-17"></div>
+          </div>
+          <div class="col-lg-6 p-2">
+            <div class="w-100 h-100 bg-light graph-container" style="min-height: 400px" id="graph-location-18"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">AI help tool</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <label class="d-block">Enter your query</label>
+        <div class="row mb-3">
+          <div class="col">
+            <input id="ai-prompt" type="text" class="form-control" placeholder="What kind of graph do I need when...">
+          </div>
+          <div class="col-auto">
+            <button id="ai-submit" type="button" class="btn btn-primary btn-outline-dark"
+              style="background-color: #A0C3D2">
+              <span id="ai-button-text">&rarr;</span>
+              <span id="ai-button-spinner" class="spinner-border spinner-border-sm" style="display: none;"></span>
+            </button>
+          </div>
+        </div>
+
+        <label class="d-block">Result</label>
+        <textarea id="ai-result" rows="8" class="form-control bg-light" readonly></textarea>
+      </div>
+      <div class="modal-footer">
+        <button id="Usebutton" type="button" class="btn btn-outline-dark" data-bs-dismiss="modal"
+          style="background-color: #A0C3D2">Use</button>
+        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal"
+          style="background-color: #A0C3D2">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Advance Search -->
+<div class="modal fade" id="advanceFilterModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="advanceFilterModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <!-- Modal content start-->
+      <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="advanceFilterModalLabel">Advance Filter</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div id="select-dates-div">
+            </div>
+            <div id="select-additional-filters">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button id="create-graph" type="button" class="btn btn-outline-dark" data-bs-dismiss="modal" style="background-color: #A0C3D2">Apply</button>
+            <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal" style="background-color: #A0C3D2">Close</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Toast message -->
+<div class="position-absolute p-3 top-50 start-50 translate-middle-y" style="z-index: 11">
+  <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <!-- TODO add logo here -->
+      <img src="/static/img/Med2.png" class="rounded me-2" width="40px">
+      <strong class="me-auto">Graph created</strong>
+    </div>
+    <div class="toast-body">
+      Your new graph is ready.
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,1 @@
+fsi -s C:\Users\anaes\Documents\MASTER\FHIR\fhir_unzip --license C:\Users\anaes\FHIR_dashboard\firelyserver-license.json -c "Data Source=./data/vonkdata.db"

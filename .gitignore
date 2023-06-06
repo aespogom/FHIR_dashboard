@@ -349,3 +349,37 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 .env
+
+# Ignore Python files
+venv/
+
+*.pyc
+__pycache__/
+
+instance/
+
+.pytest_cache/
+.coverage
+htmlcov/
+
+dist/
+build/
+*.egg-info/
+src/database/data/synthea_output/csv/careplans.csv
+src/database/data/synthea_output/csv/claims_transactions.csv
+src/database/data/synthea_output/csv/claims.csv
+src/database/data/synthea_output/csv/conditions.csv
+src/database/data/synthea_output/csv/devices.csv
+src/database/data/synthea_output/csv/encounters.csv
+src/database/data/synthea_output/csv/imaging_studies.csv
+src/database/data/synthea_output/csv/immunizations.csv
+src/database/data/synthea_output/csv/medications.csv
+src/database/data/synthea_output/csv/observations.csv
+src/database/data/synthea_output/csv/organizations.csv
+src/database/data/synthea_output/csv/patients.csv
+src/database/data/synthea_output/csv/payer_transitions.csv
+src/database/data/synthea_output/csv/payers.csv
+src/database/data/synthea_output/csv/procedures.csv
+src/database/data/synthea_output/csv/providers.csv
+src/database/data/synthea_output/csv/supplies.csv
+src/database/data/synthea_output/csv/allergies.csv
