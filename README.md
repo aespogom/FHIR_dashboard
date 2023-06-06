@@ -1,7 +1,6 @@
 # MedDash App
 
-![Logo](https://github.com/aespogom/FHIR_dashboard/blob/dev/src/static/img/Med2.png.png)
-
+![Logo](https://github.com/aespogom/FHIR_dashboard/blob/dev/src/static/img/Med2.png)
 
 MedDash project is designed to allow hospitals to easily monitor data from any resource in a single location. It uses the Fast Healthcare Interoperability Resources (FHIR) standard to transfer patient data from a Firely server hosted in Azure Web App Services. For the web-based dashboard interface, it is built in Flask framework along with the Plotly library.
 
@@ -13,6 +12,10 @@ The dashboard can be configured to display graphs that highlight trends, pattern
 
 Additionally, ChatGPT API is integrated in the application. A user can use the prompt to automatically display the desired graph. Thanks to the standarization in FHIR, it is easy to extract from a simple prompt which resource, atttributes and filters the user is inserting.
 
+## Example video
+
+![Demo](https://github.com/aespogom/FHIR_dashboard/blob/dev/management_demo_fast_gif.gif)
+## Architecture schema
 
 ![Architecture](https://github.com/aespogom/FHIR_dashboard/blob/dev/Architecture.png)
 
