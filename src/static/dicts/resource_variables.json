@@ -29,9 +29,7 @@
             "amountvalue": "int",
             "status": "string",
             "intent": "string",
-            "category": "string",
-            "goal": "string",
-            "activity": "string"
+            "category": "string"
         }
     ],
     "ClaimResponse": [
@@ -91,9 +89,7 @@
         {
             "amountvalue": "int",
             "code": "string",
-            "status": "string",
-            "doseForm": "string",
-            "ingredient": "string"
+            "status": "string"
         }
     ],
     "Observation": [
@@ -176,12 +172,8 @@
         "AdverseEvent": [
             "actuality",
             "category",
-            "code",
-            "location",
             "patient",
-            "resultingeffect",
-            "seriousness",
-            "status"
+            "seriousness"
         ],
         "AllergyIntolerance": [
             "category",
@@ -189,14 +181,11 @@
             "code",
             "criticality",
             "patient",
-            "severity",
             "type",
             "verification-status"
         ],
         "CarePlan": [
             "category",
-            "condition",
-            "goal",
             "intent",
             "patient",
             "status"
@@ -210,13 +199,10 @@
         ],
         "Condition": [
             "category",
-            "body-site",
             "clinical-status",
             "code",
-            "evidence",
             "patient",
             "severity",
-            "stage",
             "verification-status"
         ],
         "DetectedIssue": [
@@ -233,15 +219,10 @@
             "status"
         ],
         "InsurancePlan": [
-            "address",
-            "name",
-            "status",
-            "type"
+            "name"
         ],
         "Medication": [
             "code",
-            "form",
-            "ingredient-code",
             "status"
         ],
         "Observation": [
@@ -249,7 +230,6 @@
             "code",
             "code-value-quantity",
             "data-absent-reason",
-            "method",
             "patient",
             "value-quantity",
             "status"
@@ -258,7 +238,6 @@
             "category",
             "code",
             "patient",
-            "reason-code",
             "status"
         ],
         "RiskAssessment": [
