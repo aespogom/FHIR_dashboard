@@ -1,19 +1,13 @@
 {
     "AdverseEvent": [
         {
-            "status": "string",
             "actuality": "string",
             "category": "string",
             "code": "string",
             "date": "date",
             "event": "string",
-            "resultingCondition": "string",
-            "location": "string",
             "seriousness": "string",
             "severity": "string",
-            "outcome": "string",
-            "recorder": "string",
-            "suspectEntity": "string",
             "amountvalue": "int"
         }
     ],
@@ -23,7 +17,6 @@
             "clinicalStatus": "string",
             "verificationStatus": "string",
             "type": "string",
-            "text": "string",
             "reaction": "string",
             "category": "string",
             "criticality": "string",
@@ -37,15 +30,8 @@
             "status": "string",
             "intent": "string",
             "category": "string",
-            "title": "string",
-            "description": "string",
-            "contributor": "string",
-            "careTeam": "string",
-            "addresses": "string",
-            "supportingInfo": "string",
             "goal": "string",
-            "activity": "string",
-            "created": "date"
+            "activity": "string"
         }
     ],
     "ClaimResponse": [
@@ -60,7 +46,6 @@
             "disposition": "string",
             "total": "int",
             "payment": "int",
-            "error": "string",
             "created": "date"
         }
     ],
@@ -72,10 +57,6 @@
             "category": "string",
             "severity": "string",
             "code": "string",
-            "bodySite": "string",
-            "stage": "string",
-            "evidence": "string",
-            "note": "string",
             "recordedDate": "date"
         }
     ],
@@ -86,7 +67,6 @@
             "code": "string",
             "detail": "string",
             "severity": "string",
-            "evidence": "string",
             "mitigation": "string",
             "identifiedDateTime": "date"
         }
@@ -94,25 +74,17 @@
     "Encounter": [
         {
             "amountvalue": "int",
-            "classHistory": "string",
-            "diagnosis": "string",
-            "hospitalization": "string",
+            "class": "string",
             "priority": "string",
             "location": "string",
-            "length": "int",
-            "reasonCode": "string"
+            "length": "int"
 
         }
     ],
     "InsurancePlan": [
         {
             "amountvalue": "int",
-            "status": "string",
-            "type": "string",
-            "name": "string",
-            "alias": "string",
-            "coverage": "string",
-            "plan": "string"
+            "name": "string"
         }
     ],
     "Medication": [
@@ -120,8 +92,7 @@
             "amountvalue": "int",
             "code": "string",
             "status": "string",
-            "form": "string",
-            "amount": "int",
+            "doseForm": "string",
             "ingredient": "string"
         }
     ],
@@ -131,7 +102,6 @@
             "valueQuantity": "int",
             "dataAbsentReason": "string",
             "interpretation": "string",
-            "note": "string",
             "bodySite": "string",
             "component": "string",
             "code": "string",
@@ -143,11 +113,8 @@
         {
             "amountvalue": "int",
             "status": "string",
-            "statusReason": "string",
-            "reasonCode": "string",
             "category": "string",
             "code": "string",
-            "bodySite": "string",
             "outcome": "string",
             "note": "string",
             "performedDateTime": "date"
@@ -166,11 +133,7 @@
             "amountvalue": "int",
             "status": "string",
             "code": "string",
-            "condition": "string",
-            "reasonCode": "string",
             "prediction": "int",
-            "mitigation": "string",
-            "note": "string",
             "occurrenceDateTime": "date"
         }
     ],
