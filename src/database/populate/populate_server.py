@@ -21,20 +21,20 @@ load_dotenv()
 USER_PATH = 'C:/Users/anaes/FHIR_dashboard/'
 
 mypath = USER_PATH+'src/database/data/synthea_output'
-url_server = os.getenv("URL_SERVER")
+url_server = 'https://firelyasserver.azurewebsites.net/'
 headers = {
   'Content-Type': 'application/json',
   'Cookie': 'ARRAffinity=92ca53ad8db4fbb93d4d3b7d8ab54dcf8ffecb2d731f25b0e91ad575d7534c3f; ARRAffinitySameSite=92ca53ad8db4fbb93d4d3b7d8ab54dcf8ffecb2d731f25b0e91ad575d7534c3f'
 } 
 
-isExist = os.path.exists(mypath+"/zip")
+isExist = os.path.exists(mypath+"/sample")
 if not isExist:
-    os.makedirs(mypath+"/zip")
+    os.makedirs(mypath+"/sample")
 
-onlyfiles = [f for f in listdir(mypath+"/zip") if isfile(join(mypath+"/zip", f))]  
+onlyfiles = [f for f in listdir(mypath+"/sample") if isfile(join(mypath+"/sample", f))]  
 for file_name in onlyfiles:
     # Opening JSON file
-    f = open(mypath+'/zip/'+file_name)
+    f = open(mypath+'/sample/'+file_name)
     
     # returns JSON object as a dictionary
     data = json.load(f)
@@ -53,5 +53,5 @@ for file_name in onlyfiles:
     
     # Closing file
     f.close()
-shutil.rmtree(mypath+"/zip")
+shutil.rmtree(mypath+"/sample")
 print('--------------FINISHED---------------')
