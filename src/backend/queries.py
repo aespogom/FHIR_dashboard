@@ -155,10 +155,20 @@ def create_dataframe(dataframe: pd.DataFrame,
         y_value = eval("registry_as_json"+y_access) if y_col and registry_as_json.get(y_col) else None
         x_value, y_value = parse_result_plotly(x_value, x_datatype, y_value, y_datatype)
       except Exception as e:
-         x_value=None
-         y_value=None
-         print('There is an inconsistency in the database, skiping one registry ' +str(e))
+        x_value=None
+        y_value=None
+        print('There is an inconsistency in the database, skiping one registry ' +str(e))
       dataframe.loc[len(dataframe)] = [str(x_value), y_value]
+  try:
+    dataframe[x_col] = pd.to_datetime(dataframe[x_col], yearfirst=True)
+    dataframe = dataframe.sort_values(x_col, ascending=False)
+    dataframe[x_col] = dataframe[x_col].dt.strftime('%Y-%m-%d')
+  except:
+    try:
+      dataframe[x_col] = pd.to_numeric(dataframe[x_col])
+      dataframe = dataframe.sort_values(x_col, ascending=False)
+    except:
+      dataframe = dataframe.sort_values(x_col, ascending=False)
   return dataframe
 
 
