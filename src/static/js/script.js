@@ -250,43 +250,48 @@ function updateGraphStorage(graph) {
     localStorage.setItem("graphs", updated_graph_data);
 }
 
-function cb(data, graph_location) {
-    $("#Go-button-text").hide()
-    $("#Go-button-spinner").show()
-    $.ajax({
-        type: "POST",
-        url: "/callback",
-        data: data,
-        contentType: "application/json",
-        dataType: 'json',
-        success: function (data) {
-            $("#Go-button-text").show();
-            $('#select-graph-div').empty();
-            $("#select-resource-div").empty();
-            $("#select-variabele-div").empty();
-            $("#AI-help").hide();
-            $("#filter-button").hide();
-            $("#"+graph_location).removeClass("bg-secondary").addClass("bg-light");
-            Plotly.newPlot(graph_location, data, {staticPlot: true});
-            if ($('#'+graph_location).find('#close-button').length === 0){
-                var close_button = `
+async function cb(data, graph_location) {
+    $("#Go-button-text").hide();
+    $("#Go-button-spinner").show();
+
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            type: "POST",
+            url: "/callback",
+            data: data,
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (data) {
+                $("#Go-button-text").show();
+                $('#select-graph-div').empty();
+                $("#select-resource-div").empty();
+                $("#select-variabele-div").empty();
+                $("#AI-help").hide();
+                $("#filter-button").hide();
+                $("#" + graph_location).removeClass("bg-secondary").addClass("bg-light");
+                Plotly.newPlot(graph_location, data, { staticPlot: true });
+                if ($('#' + graph_location).find('#close-button').length === 0) {
+                    var close_button = `
                 <input id="close-button" type="button"
                 class="btn-close bg-light" aria-label="Close" 
-                onclick="$('#`+graph_location+`').empty()" 
+                onclick="$('#`+ graph_location + `').empty()" 
                 style="margin-left: auto;display: block;"/>`
-                $('#'+graph_location).prepend(close_button);
+                    $('#' + graph_location).prepend(close_button);
+                }
+                $("#Go-button-spinner").hide();
+                resolve();
+                $("#liveToast").show();
+                setTimeout(() => { $("#liveToast").hide(); }, 3000);
+            },
+            error: function (request, status, error) {
+                alert(request.responseText);
+                handleGraphTypeChange();
+                $("#Go-button-spinner").hide();
+                $("#Go-button-text").show();
+                resolve();
             }
-            $("#Go-button-spinner").hide();
-            $("#liveToast").show();
-            setTimeout(()=>{$("#liveToast").hide();}, 3000)
-        },
-        error: function (request, status, error) {
-            alert(request.responseText);
-            handleGraphTypeChange();
-            $("#Go-button-spinner").hide();
-            $("#Go-button-text").show();
-        }  
-    })
+        });
+    });
 }
 
 $("#ai-submit").click(function () {
@@ -439,7 +444,7 @@ $("#generate-data").click(function () {
     "data_element_y":"",\
     "start_date":"",\
     "end_date":"",\
-    "filters":{"code":"100,101,102,103,104,105,106,107,108,109,110"},\
+    "filters":{},\
     "graph_location": "graph-location-5"}'
 
     var dataArray = [scenario_1, scenario_2, scenario_3, scenario_4, scenario_5];
@@ -474,18 +479,21 @@ $('#import').click(function () {
         };
         reader.readAsText(file);
     };
+
     input.click();
 });
 
-function displayImportedGraphs() {
+async function displayImportedGraphs() {
     var graphs = localStorage.getItem('graphs');
 
     if (graphs) {
         var graphs_array = JSON.parse(graphs);
-        graphs_array.forEach(function (graph) {
+
+        for (const graph of graphs_array) {
             var graph_location_for_import = JSON.parse(graph)["graph_location"];
-            cb(graph, graph_location_for_import);
-        });
+            console.log(graph_location_for_import);
+            await cb(graph, graph_location_for_import);
+        }
     } else {
         console.log('No graphs found in localStorage.');
     }
