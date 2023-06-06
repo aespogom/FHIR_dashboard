@@ -1,25 +1,30 @@
 # MedDash App
 
-MedDash project is designed to allow hospitals to easily monitor patient data from various sources in a single location. It utilizes the Fast Healthcare Interoperability Resources (FHIR) standard to transfer patient data and it is built using the Flask framework along with the Dash library for the web-based dashboard interface.
+![Logo](https://github.com/aespogom/FHIR_dashboard/blob/dev/src/static/img/Med2.png.png)
 
-The dashboard can be easily customized to meet the needs of different hospital departments, with options to select which patient data sources to display, how the data is displayed, and other features.
 
-One of the key advantages of this project is its generalizability. With the use of FHIR, the dashboard can easily connect to various electronic health record (EHR) systems and other healthcare data sources. This means that hospitals and healthcare organizations of all sizes and specialties can use the dashboard to monitor and manage patient data, regardless of their existing infrastructure.
+MedDash project is designed to allow hospitals to easily monitor data from any resource in a single location. It uses the Fast Healthcare Interoperability Resources (FHIR) standard to transfer patient data from a Firely server hosted in Azure Web App Services. For the web-based dashboard interface, it is built in Flask framework along with the Plotly library.
+
+The dashboard can be easily customized to meet the needs of different hospital departments, with options to select which data resources to display, how the data is displayed, filter by any attribute or resource, and other features.
+
+One of the key advantages of this project is its generalizability. With the use of FHIR, the dashboard can easily connect to various electronic health record (EHR) systems and other healthcare data sources. This means that hospitals and healthcare organizations of all sizes and specialties can use the dashboard to monitor and manage their data, regardless of their existing infrastructure. The only requirement is FHIR protocol.
 
 The dashboard can be configured to display graphs that highlight trends, patterns, and insights that may be difficult to discern from raw data alone. This enables healthcare providers to quickly identify potential issues, such as spikes in patient activity or concerning changes in vital signs, and take action as needed.
 
+Additionally, ChatGPT API is integrated in the application. A user can use the prompt to automatically display the desired graph. Thanks to the standarization in FHIR, it is easy to extract from a simple prompt which resource, atttributes and filters the user is inserting.
 
-![Architecture](https://github.com/aespogom/FHIR_dashboard/blob/dev/Architecture.jpg)
+
+![Architecture](https://github.com/aespogom/FHIR_dashboard/blob/dev/Architecture.png)
 
 ## Getting started
 1. Clone the repository 
-2. Navigate to the project
+2. Navigate to the project `/src/`
 3. Create a virtual environment
 4. Install the required dependencies
 5. Ask for the .env file to the team
 6. Run the project
 
-## Depencies
+## Dependencies
 Before running the application, you will need to have the following installed:
 
 - Python 3.9
@@ -68,7 +73,7 @@ the call query_firely_server from src/backend/queries.py
         - date_to (datetime, optional): datetime(2022, 5, 23, 0, 0)
         - y (string, optional): None
     
-    resulting endpoint: `[URL_SERVER]`/AdverseEvent??date=ge2022-05-1&date=le2023-05-23
+    resulting endpoint: `[URL_SERVER]`/AdverseEvent?date=ge2022-05-01&date=le2023-05-23
 
 2. Advance query by datetime + relate to other resource:
     
