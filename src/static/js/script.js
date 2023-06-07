@@ -313,15 +313,18 @@ function aigpt(prompt) {
     let input_prompt = `\
         Upon receiving a free text string, the model will:
         1. Identify a type of graph mentioned in the provided list: "Line graph, Bar graph, Pie chart, Scatter plot." The model will extract the corresponding type of graph as a string.
+        1a. If only one categorical variable has to be plotted, a "Pie chart" is most suited. If a date and a categorical variable have to be plotted, a "Bar graph" is most suited. If a date and a numerical variable have to be plotted, a "Line graph" is most suited. If two numerical variables have to be plotted, a "Scatter plot" is most suited. 
         2. Identify a type of FHIR resource mentioned in the provided list: """AdverseEvent, AllergyIntolerance, CarePlan, ClaimResponse, Condition, DetectedIssue, InsurancePlan, Medication, Observation, Procedure, RiskAssessment, Encounter, Patient""". The model will extract the corresponding FHIR resource as a string.
-        3. Extract one or two attributes related to the FHIR resource mentioned in step 2. The model will verify that the mentioned attribute(s) are included in the official FHIR R4 resource.
-        4. Identify a set of filters. Each filter consists of one FHIR resource, one attribute, and one value to filter by. The filter FHIR resource should be included in the provided list: """AdverseEvent, AllergyIntolerance, CarePlan, ClaimResponse, Condition, DetectedIssue, InsurancePlan, Medication, Observation, Procedure, RiskAssessment, Encounter, Patient""". The filter FHIR resource may be different from the identified resource in step 1. The filter attribute is included in the official FHIR R4. The model will extract the corresponding set of filters as a key-value dictionary. The dictionary key will be a string corresponding to the filter resource. For each filter resource, a new key should be set. The value of the dictionary will be an embedded dictionary. The embedded dictionary has a key corresponding to the filter attribute and a value corresponding to the filter value. Exclude from the response all of the following characters: <, >, ==, != .
-        The resulting keywords will be returned as a semicolon-separated string.
+        3. A pie chart only has 1 X variable, all other types of graphs have both 1 X variable and 1 Y variable.
+        4. Extract one or two attributes related to the FHIR resource mentioned in step 2. The model will verify that the mentioned attribute(s) are included in the official FHIR R4 resource. 
+        5. For each resource, the following variable names are accepted: "[resource name: AdverseEvent, variables: actuality, category, code, date, event, seriousness, severity, amountvalue], [resource name: AllergyIntolerance, variables: amountvalue, clinicalStatus, verificationStatus, type, reaction, category, criticality, code, recordedDate], [resource name: CarePlan, variables: amountvalue, status, intent, category], [resource name: ClaimResponse, variables: amountvalue, status, type, subType, use, insurer, outcome, disposition, total, payment, created], [resource name: Condition, variables: amountvalue, clinicalStatus, verificationStatus, category, severity, code, recordedDate], [resource name: DetectedIssue, variables: amountvalue, status, code, detail, severity, mitigation, identifiedDateTime], [resource name: Encounter, variables: amountvalue, class, priority, location, length], [resource name: InsurancePlan, variables: amountvalue, name], [resource name: Medication, variables: amountvalue, code, status], [resource name: Observation, variables: amountvalue, valueQuantity, dataAbsentReason, interpretation, bodySite, component, code, status, effectiveDateTime], [resource name: Procedure, variables: amountvalue, status, category, code, outcome, note, performedDateTime], [resource name: Patient, variables: amountvalue, active, gender, birthDate], [resource name: RiskAssessment, variables: amountvalue, status, code, prediction, occurrenceDateTime]"
+        6. Use the exact same name with the same upper/lower cases as provided in this prompt.
+        7. Identify a set of filters. Each filter consists of one FHIR resource, one attribute, and one value to filter by. The filter FHIR resource should be included in the provided list: """AdverseEvent, AllergyIntolerance, CarePlan, ClaimResponse, Condition, DetectedIssue, InsurancePlan, Medication, Observation, Procedure, RiskAssessment, Encounter, Patient""". The filter FHIR resource may be different from the identified resource in step 1. The filter attribute is included in the official FHIR R4. The model will extract the corresponding set of filters as a key-value dictionary. The dictionary key will be a string corresponding to the filter resource. For each filter resource, a new key should be set. The value of the dictionary will be an embedded dictionary. The embedded dictionary has a key corresponding to the filter attribute and a value corresponding to the filter value. Exclude from the response all of the following characters: <, >, ==, != .
+        8. If a variable which is a date is selected, this is alway the X variable
+        9. Filteres are in the format of {"Resource type": {"Variable": value}}
+        10. The resulting keywords will be returned as a semicolon-separated string in the format: graph type; resource; x variable; y variable (if needed); filters (if needed)
+        11. No leading or trailing whitespace or tabs are allowed
         If it is not possible to extract any keyword, an empty string will be returned.
-        If no type of graph is mentioned and two attributes are identified, return Line graph.
-        If no type of graph is mentioned and one attribute is identified, return Pie chart.
-        If no FHIR resource is identified, return Observation.
-        If no attributes are identified, return date and amountvalue.
         If no filters are identified, return {}.
         Free text string 1: """I want to plot patient age versus gender as bars."""
         Keywords 1: Bar graph; Patient; age; gender; {}
@@ -332,6 +335,11 @@ function aigpt(prompt) {
         Free text string 3: """${prompt}"""
         Keywords 3:
     `
+
+    //  If no type of graph is mentioned and two attributes are identified, return Line graph.
+    //     If no type of graph is mentioned and one attribute is identified, return Pie chart.
+    //     If no FHIR resource is identified, return Observation.
+    //     If no attributes are identified, return date and amountvalue.
     $.ajax({
         type: "POST",
         url: "/generate",

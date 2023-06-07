@@ -23,10 +23,10 @@ bootstrap = Bootstrap5(app)
 def cb():
     data = request.get_json()
     print(data)
-    graph_type = data["graph_type"]
-    resource = data["resource"]
-    data_element_x = data["data_element_x"]
-    data_element_y = data["data_element_y"]
+    graph_type = data["graph_type"].strip()
+    resource = data["resource"].strip()
+    data_element_x = data["data_element_x"].strip()
+    data_element_y = data["data_element_y"].strip()
     date_format = '%Y-%m-%d %H:%M:%S'
     start_date = None
     end_date = None
